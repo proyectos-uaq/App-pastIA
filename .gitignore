@@ -1,0 +1,70 @@
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins*
+.packages
+build/
+*.iml
+*.lock
+
+# Android
+android/local.properties
+android/key.properties
+android/signing.properties
+android/.gradle/
+android/app/build/
+android/build/
+android/app/.cxx/
+android/gradle/
+android/captures/
+
+# iOS
+ios/.symlinks/
+ios/.generated/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/ephemeral/
+ios/Flutter/App.framework/
+ios/Flutter/Flutter.framework/
+ios/Flutter/flutter_assets/
+ios/Pods/
+ios/.bundle/
+ios/build/
+ios/DerivedData/
+
+# Android Studio/IntelliJ
+.idea/
+.idea/*.xml
+.idea/modules.xml
+.idea/caches/
+!.idea/runConfigurations/
+
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# System
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+*.tmp
+*.bak
+*~
+*.swp
+.temp/
+
+# Environment/credentials
+.env
+.env.*
+lib/config/secrets.dart
+
+# Generated files
+*.g.dart
+*.freezed.dart
+lib/firebase_options.dart
+
+# Coverage
+coverage/
