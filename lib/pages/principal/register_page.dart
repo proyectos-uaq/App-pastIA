@@ -70,6 +70,7 @@ class _RegisterPageState extends State<RegisterPage> {
           _isSubmitting = false;
         });
 
+        // ignore: use_build_context_synchronously
         showSuccessDialog(context);
       }
     }

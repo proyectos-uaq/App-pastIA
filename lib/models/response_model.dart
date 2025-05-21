@@ -11,7 +11,7 @@ class ApiResponse<T> {
     this.error,
   });
 
-  bool get hasError => error != null;
+  bool get hasError => error != null || data == null;
 
   factory ApiResponse.fromJson(
     Map<String, dynamic> json, {
@@ -21,7 +21,7 @@ class ApiResponse<T> {
     if (json['message'] is String) {
       parsedMessage = json['message'];
     } else if (json['message'] is List && json['message'].isNotEmpty) {
-      parsedMessage = json['message'][0];
+      parsedMessage = json['message'][0].toString();
     } else {
       parsedMessage = 'Mensaje no disponible';
     }
@@ -29,14 +29,10 @@ class ApiResponse<T> {
     final String? parsedError = json['error'] is String ? json['error'] : null;
 
     T? parsedData;
-    if (json['data'] != null) {
-      if (json['data'] is List) {
-        parsedData = fromData(
-          (json['data'] as List).map((e) => e as Map<String, dynamic>).toList(),
-        );
-      } else {
-        parsedData = fromData(json['data']);
-      }
+    final rawData = json['data'];
+
+    if (rawData != null) {
+      parsedData = fromData(rawData);
     }
 
     return ApiResponse<T>(
@@ -49,13 +45,13 @@ class ApiResponse<T> {
 
   @override
   String toString() {
-    final buffer = StringBuffer('ApiResponse {\n');
-    buffer.writeln('  data: $data,');
-    buffer.writeln('  message: $message,');
-    buffer.writeln('  statusCode: $statusCode,');
-    buffer.writeln('  error: $error');
-    buffer.write('}');
-    return buffer.toString();
+    return '''
+ApiResponse {
+  data: $data,
+  message: $message,
+  statusCode: $statusCode,
+  error: $error
+}''';
   }
 }
 
@@ -63,5 +59,5 @@ T extractOrThrow<T>(ApiResponse<T> response) {
   if (response.hasError || response.data == null) {
     throw Exception(response.message);
   }
-  return response.data!;
+  return response.data as T;
 }

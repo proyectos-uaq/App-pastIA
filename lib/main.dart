@@ -1,11 +1,12 @@
-import 'package:app_pastia/pages/home_page.dart';
-import 'package:app_pastia/pages/login_page.dart';
-import 'package:app_pastia/pages/register_page.dart';
+import 'package:app_pastia/pages/principal/home_page.dart';
+import 'package:app_pastia/pages/principal/login_page.dart';
+import 'package:app_pastia/pages/principal/register_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -33,14 +34,14 @@ class MyApp extends StatelessWidget {
             );
           }
           if (snapshot.hasData && snapshot.data == true) {
-            return const HomePage();
+            return HomePage();
           } else {
             return const LoginPage();
           }
         },
       ),
       routes: {
-        '/home': (context) => const HomePage(),
+        '/home': (context) => HomePage(),
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const RegisterPage(),
       },
@@ -49,7 +50,9 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.blue,
           foregroundColor: Colors.white,
         ),
+        scaffoldBackgroundColor: Colors.white,
       ),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

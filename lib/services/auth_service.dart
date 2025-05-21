@@ -69,14 +69,31 @@ class AuthService {
     }
   }
 
-  // Obtener el JWT
+  // Guardar el JWT
   static Future<void> saveJwtToken({required String token}) async {
     const FlutterSecureStorage secureStorage = FlutterSecureStorage();
     await secureStorage.write(key: 'token', value: token);
+  }
 
-    final storage = FlutterSecureStorage();
-    Map<String, String> allValues = await storage.readAll();
-    print(allValues);
+  // Obtener el JWT
+  static Future<String?> getJwtToken() async {
+    const FlutterSecureStorage secureStorage = FlutterSecureStorage();
+    return await secureStorage.read(key: 'token');
+  }
+
+  // Decodificar el JWT
+  static Map<String, dynamic>? decodeJwt(String token) {
+    final parts = token.split('.');
+    if (parts.length != 3) {
+      return null;
+    }
+
+    final payload = parts[1];
+    final normalizedPayload = base64Url.normalize(payload);
+    final decodedBytes = base64Url.decode(normalizedPayload);
+    final decodedString = utf8.decode(decodedBytes);
+
+    return jsonDecode(decodedString);
   }
 
   // Eliminar el JWT (ej: logout)
