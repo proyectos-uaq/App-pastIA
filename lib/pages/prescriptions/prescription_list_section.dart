@@ -1,5 +1,5 @@
 import 'package:app_pastia/pages/prescriptions/prescription_page.dart';
-import 'package:app_pastia/providers/providers.dart';
+import 'package:app_pastia/providers/prescription_provider.dart';
 import 'package:app_pastia/widgets/notification_container.dart';
 import 'package:app_pastia/pages/prescriptions/widgets/prescription_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,11 +34,10 @@ class PrescriptionListSection extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Campo de búsqueda
                 TextField(
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.search),
-                    hintText: 'Buscar receta...',
+                    hintText: 'Buscar receta por nombre...',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -48,7 +47,6 @@ class PrescriptionListSection extends ConsumerWidget {
                   },
                 ),
                 const SizedBox(height: 18),
-                // Texto arriba de la lista y botón de agregar
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

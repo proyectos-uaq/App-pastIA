@@ -7,7 +7,7 @@ class PrescriptionCard extends StatelessWidget {
   const PrescriptionCard({super.key, required this.prescription});
 
   String formatDate(String? isoDate) {
-    if (isoDate == null) return 'Sin fecha';
+    if (isoDate == null || isoDate.isEmpty) return 'Sin fecha';
     try {
       final date = DateTime.parse(isoDate);
       return DateFormat('dd/MM/yyyy').format(date);
@@ -26,7 +26,12 @@ class PrescriptionCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(18),
         onTap: () {
-          // Acción al tocar la tarjeta (puedes personalizar)
+          // Acción al presionar la tarjeta
+          Navigator.pushNamed(
+            context,
+            '/prescriptionDetails',
+            arguments: {'prescriptionId': prescription.prescriptionId},
+          );
         },
         child: Padding(
           padding: const EdgeInsets.all(18),
@@ -40,7 +45,7 @@ class PrescriptionCard extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 padding: const EdgeInsets.all(12),
-                child: Icon(
+                child: const Icon(
                   Icons.medical_services_rounded,
                   color: Colors.blue,
                   size: 32,
@@ -63,7 +68,7 @@ class PrescriptionCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.calendar_today,
                           size: 16,
                           color: Colors.green,
@@ -71,22 +76,22 @@ class PrescriptionCard extends StatelessWidget {
                         const SizedBox(width: 6),
                         Text(
                           'Creada el: ${formatDate(prescription.createdAt.toString())}',
-                          style: TextStyle(fontSize: 15),
+                          style: const TextStyle(fontSize: 15),
                         ),
                       ],
                     ),
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.medication,
                           size: 16,
-                          color: Colors.amberAccent,
+                          color: Colors.amber,
                         ),
                         const SizedBox(width: 6),
                         Text(
                           'Medicamentos: ${prescription.medicationCount ?? 'Sin descripción'}',
-                          style: TextStyle(fontSize: 15),
+                          style: const TextStyle(fontSize: 15),
                         ),
                       ],
                     ),
@@ -95,7 +100,7 @@ class PrescriptionCard extends StatelessWidget {
               ),
               // Botón de acción (opcional)
               IconButton(
-                icon: Icon(
+                icon: const Icon(
                   Icons.arrow_forward_ios_rounded,
                   color: Colors.black,
                 ),
@@ -103,6 +108,11 @@ class PrescriptionCard extends StatelessWidget {
                 iconSize: 24,
                 onPressed: () {
                   // Acción al presionar el botón (puedes personalizar)
+                  Navigator.pushNamed(
+                    context,
+                    '/prescriptionDetails',
+                    arguments: {'prescriptionId': prescription.prescriptionId},
+                  );
                 },
               ),
             ],

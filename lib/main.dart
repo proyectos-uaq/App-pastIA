@@ -1,3 +1,4 @@
+import 'package:app_pastia/pages/prescriptions/prescription_details_page.dart';
 import 'package:app_pastia/pages/principal/home_page.dart';
 import 'package:app_pastia/pages/principal/login_page.dart';
 import 'package:app_pastia/pages/principal/register_page.dart';
@@ -44,6 +45,14 @@ class MyApp extends StatelessWidget {
         '/home': (context) => HomePage(),
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const RegisterPage(),
+        '/prescriptionDetails': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map?;
+          final prescriptionId =
+              args != null && args['prescriptionId'] != null
+                  ? args['prescriptionId'] as String
+                  : '';
+          return PrescriptionDetailPage(prescriptionId: prescriptionId);
+        },
       },
       theme: ThemeData(
         appBarTheme: const AppBarTheme(

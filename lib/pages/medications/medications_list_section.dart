@@ -1,4 +1,5 @@
 import 'package:app_pastia/pages/medications/medications_page.dart';
+import 'package:app_pastia/providers/prescription_provider.dart';
 import 'package:app_pastia/providers/providers.dart';
 import 'package:app_pastia/widgets/notification_container.dart';
 import 'package:app_pastia/pages/medications/widgets/medication_card.dart';
