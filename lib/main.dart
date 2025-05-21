@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
 
   // Método que verifica si el token existe
   Future<bool> hasToken() async {
-    final token = await _secureStorage.read(key: 'jwt_token');
+    final token = await _secureStorage.read(key: 'token');
     return token != null && token.isNotEmpty;
   }
 
@@ -44,6 +44,12 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const RegisterPage(),
       },
+      theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+        ),
+      ),
     );
   }
 }

@@ -1,6 +1,5 @@
+import 'package:app_pastia/widgets/schedule_card.dart';
 import 'package:flutter/material.dart';
-
-void main() => runApp(const HomePage());
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -8,8 +7,32 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Material App Bar')),
-      body: SafeArea(child: const Center(child: Text('Home Page'))),
+      appBar: AppBar(
+        title: const Text(
+          'Pastillero inteligente',
+          style: TextStyle(fontSize: 24),
+        ),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Horarios proximos", style: TextStyle(fontSize: 20)),
+              const SizedBox(height: 16),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: 5,
+                  itemBuilder: (context, index) {
+                    // return const ScheduleCard(schedule: ,);
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
