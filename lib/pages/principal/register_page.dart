@@ -1,7 +1,7 @@
 import 'package:app_pastia/models/user_model.dart';
 import 'package:app_pastia/services/auth_service.dart';
 import 'package:app_pastia/theme/button_styles.dart';
-import 'package:app_pastia/widgets/custom_text_fields.dart';
+import 'package:app_pastia/widgets/text_fields/text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:app_pastia/widgets/logo.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

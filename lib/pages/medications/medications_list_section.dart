@@ -3,10 +3,11 @@ import 'package:app_pastia/pages/medications/widgets/medication_card.dart';
 import 'package:app_pastia/providers/medications_provider.dart';
 import 'package:app_pastia/providers/prescription_provider.dart';
 import 'package:app_pastia/widgets/custom_buttons.dart';
-import 'package:app_pastia/widgets/custom_text_fields.dart';
 import 'package:app_pastia/widgets/notification_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../widgets/custom_text_fields.dart';
 
 /// Widget principal que muestra la sección de medicamentos.
 class MedicationListSection extends ConsumerWidget {

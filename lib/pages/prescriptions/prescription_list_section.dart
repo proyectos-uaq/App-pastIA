@@ -1,12 +1,13 @@
 import 'package:app_pastia/pages/prescriptions/prescription_nav_providers.dart';
 import 'package:app_pastia/providers/prescription_provider.dart';
 import 'package:app_pastia/widgets/custom_buttons.dart';
-import 'package:app_pastia/widgets/custom_text_fields.dart';
-import 'package:app_pastia/widgets/dialogs/create_prescription_dialog.dart';
 import 'package:app_pastia/widgets/notification_container.dart';
 import 'package:app_pastia/pages/prescriptions/widgets/prescription_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+
+import '../../widgets/custom_dialogs.dart';
+import '../../widgets/custom_text_fields.dart';
 
 // Widget principal que muestra la sección de recetas.
 class PrescriptionListSection extends ConsumerWidget {
