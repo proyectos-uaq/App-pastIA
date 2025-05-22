@@ -1,5 +1,6 @@
 import 'package:app_pastia/pages/medications/medications_list_section.dart';
 import 'package:app_pastia/pages/principal/home_page.dart';
+import 'package:app_pastia/providers/medications_provider.dart';
 import 'package:app_pastia/providers/providers.dart';
 import 'package:app_pastia/widgets/error_scaffolds.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

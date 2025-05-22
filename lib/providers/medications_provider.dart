@@ -19,3 +19,14 @@ final medicationsDetailProvider =
       handleServerError(response);
       return response;
     });
+
+// Provider para la lista de medicamentos
+final medicationProvider =
+    FutureProvider.family<ApiResponse<List<Medication>>, String>((
+      ref,
+      token,
+    ) async {
+      var response = await MedicationService.getMedications(token: token);
+      handleServerError(response);
+      return response;
+    });

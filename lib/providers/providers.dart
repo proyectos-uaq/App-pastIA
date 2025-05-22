@@ -1,6 +1,4 @@
-import 'package:app_pastia/models/medication_model.dart';
 import 'package:app_pastia/services/auth_service.dart';
-import 'package:app_pastia/services/medication_service.dart';
 import 'package:app_pastia/services/schedule_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/schedule_model.dart';
@@ -34,17 +32,6 @@ final autoRefreshProvider = StreamProvider<void>((ref) async* {
     yield null; // Emite un valor para forzar el rebuild
   }
 });
-
-// Provider para la lista de medicamentos
-final medicationProvider =
-    FutureProvider.family<ApiResponse<List<Medication>>, String>((
-      ref,
-      token,
-    ) async {
-      var response = await MedicationService.getMedications(token: token);
-      handleServerError(response);
-      return response;
-    });
 
 // Provider para obtener el JWT
 final jwtTokenProvider = FutureProvider<String?>((ref) async {

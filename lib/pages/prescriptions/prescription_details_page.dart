@@ -1,5 +1,6 @@
 import 'package:app_pastia/pages/medications/widgets/detail_scaffolds.dart';
 import 'package:app_pastia/pages/prescriptions/widgets/prescription_detail_scaffold.dart';
+import 'package:app_pastia/providers/medications_provider.dart';
 import 'package:app_pastia/providers/prescription_provider.dart';
 import 'package:app_pastia/providers/providers.dart';
 import 'package:app_pastia/widgets/custom_dialogs.dart';
