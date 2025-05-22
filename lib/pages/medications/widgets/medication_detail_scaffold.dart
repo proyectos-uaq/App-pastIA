@@ -1,6 +1,8 @@
 import 'package:app_pastia/pages/medications/widgets/detail_row.dart';
 import 'package:app_pastia/providers/medications_provider.dart';
 import 'package:app_pastia/utils/format_helpers.dart';
+import 'package:app_pastia/widgets/custom_buttons.dart';
+import 'package:app_pastia/widgets/custom_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app_pastia/pages/medications/widgets/schedule_medication_card.dart';
@@ -61,6 +63,7 @@ class MedicationDetailScaffold extends StatelessWidget {
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
+                              // ignore: deprecated_member_use
                               color: Colors.blue.shade100.withOpacity(0.2),
                               blurRadius: 12,
                             ),
@@ -141,27 +144,20 @@ class MedicationDetailScaffold extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
-                      ElevatedButton.icon(
-                        icon: Icon(Icons.add, color: Colors.blue.shade900),
-                        label: const Text("Nuevo horario"),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue.shade100,
-                          foregroundColor: Colors.blue.shade900,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                            side: BorderSide(
-                              color: Colors.blue.shade100,
-                              width: 1,
-                            ),
-                          ),
-                          textStyle: const TextStyle(fontSize: 16),
-                        ),
-                        onPressed: () {
-                          // TODO: Acción para agregar nuevo horario
+                      RoundedIconButton(
+                        icon: Icons.add,
+                        label: 'Nuevo horario',
+                        onPressed: () async {
+                          final created = await CreateTimeDialog.show(
+                            context,
+                            token: token,
+                            medicationId: medication.medicationId,
+                          );
+                          if (created == true) {
+                            ref.invalidate(
+                              medicationsDetailProvider((medicationId, token)),
+                            );
+                          }
                         },
                       ),
                     ],

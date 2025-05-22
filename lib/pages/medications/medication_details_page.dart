@@ -1,7 +1,7 @@
 import 'package:app_pastia/pages/medications/widgets/medication_detail_scaffold.dart';
 import 'package:app_pastia/providers/medications_provider.dart';
 import 'package:app_pastia/providers/providers.dart';
-import 'package:app_pastia/widgets/delete_confirmation_dialog.dart';
+import 'package:app_pastia/widgets/custom_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

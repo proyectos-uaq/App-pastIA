@@ -1,5 +1,6 @@
 import 'package:app_pastia/models/medication_model.dart';
 import 'package:app_pastia/utils/format_helpers.dart';
+import 'package:app_pastia/widgets/custom_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -157,27 +158,11 @@ class PrescriptionDetailScaffold extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
-                      ElevatedButton.icon(
-                        icon: Icon(Icons.add, color: Colors.blue.shade900),
-                        label: const Text("Agregar medicamento"),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue.shade100,
-                          foregroundColor: Colors.blue.shade900,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                            side: BorderSide(
-                              color: Colors.blue.shade100,
-                              width: 1,
-                            ),
-                          ),
-                          textStyle: const TextStyle(fontSize: 16),
-                        ),
+                      RoundedIconButton(
+                        icon: Icons.add,
+                        label: 'Agregar medicamento',
                         onPressed: () {
-                          // TODO: Acción para agregar nuevo horario
+                          // TODO : Agregar medicamento
                         },
                       ),
                     ],

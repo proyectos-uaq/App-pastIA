@@ -2,6 +2,7 @@ import 'package:app_pastia/pages/medications/medication_nav_providers.dart';
 import 'package:app_pastia/pages/medications/widgets/medication_card.dart';
 import 'package:app_pastia/providers/prescription_provider.dart';
 import 'package:app_pastia/providers/providers.dart';
+import 'package:app_pastia/widgets/custom_buttons.dart';
 import 'package:app_pastia/widgets/custom_text_fields.dart';
 import 'package:app_pastia/widgets/notification_container.dart';
 import 'package:flutter/material.dart';
@@ -130,21 +131,11 @@ class MedicationListHeader extends StatelessWidget {
           ),
         ),
         if (hasPrescriptions)
-          ElevatedButton.icon(
-            icon: Icon(Icons.add, color: Colors.blue.shade900),
-            label: const Text("Nuevo medicamento"),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue.shade100,
-              foregroundColor: Colors.blue.shade900,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50),
-                side: BorderSide(color: Colors.blue.shade100, width: 1),
-              ),
-              textStyle: const TextStyle(fontSize: 16),
-            ),
+          RoundedIconButton(
+            icon: Icons.add,
+            label: 'Nuevo medicamento',
             onPressed: () {
-              // TODO: Agregar nuevo medicamento
+              // TODO: Acción para agregar medicamento
             },
           ),
       ],

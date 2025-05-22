@@ -1,5 +1,6 @@
 import 'package:app_pastia/pages/prescriptions/prescription_nav_providers.dart';
 import 'package:app_pastia/providers/prescription_provider.dart';
+import 'package:app_pastia/widgets/custom_buttons.dart';
 import 'package:app_pastia/widgets/custom_text_fields.dart';
 import 'package:app_pastia/widgets/notification_container.dart';
 import 'package:app_pastia/pages/prescriptions/widgets/prescription_card.dart';
@@ -108,21 +109,11 @@ class PrescriptionListHeader extends StatelessWidget {
             fontSize: 20,
           ),
         ),
-        ElevatedButton.icon(
-          icon: Icon(Icons.add, color: Colors.blue.shade900),
-          label: const Text("Agregar receta"),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue.shade100,
-            foregroundColor: Colors.blue.shade900,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50),
-              side: BorderSide(color: Colors.blue.shade100, width: 1),
-            ),
-            textStyle: const TextStyle(fontSize: 16),
-          ),
+        RoundedIconButton(
+          icon: Icons.add,
+          label: 'Agregar receta',
           onPressed: () {
-            // TODO: Agregar receta
+            // TODO: Acción para agregar receta
           },
         ),
       ],
