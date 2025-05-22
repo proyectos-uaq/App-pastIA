@@ -2,12 +2,13 @@ import 'package:app_pastia/pages/prescriptions/prescription_nav_providers.dart';
 import 'package:app_pastia/providers/prescription_provider.dart';
 import 'package:app_pastia/widgets/custom_buttons.dart';
 import 'package:app_pastia/widgets/custom_text_fields.dart';
+import 'package:app_pastia/widgets/dialogs/create_prescription_dialog.dart';
 import 'package:app_pastia/widgets/notification_container.dart';
 import 'package:app_pastia/pages/prescriptions/widgets/prescription_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
-//Widget principal que muestra la sección de recetas.
+// Widget principal que muestra la sección de recetas.
 class PrescriptionListSection extends ConsumerWidget {
   final String token;
   const PrescriptionListSection({super.key, required this.token});
@@ -24,8 +25,10 @@ class PrescriptionListSection extends ConsumerWidget {
           prescriptions: List.from(prescriptionData.data ?? []),
           searchText: searchText,
           onSearchChanged: (value) {
-            ref.read(prescriptionSearchProvider.notifier);
+            ref.read(prescriptionSearchProvider.notifier).state = value;
           },
+          token: token,
+          ref: ref,
         );
       },
       error:
@@ -45,12 +48,16 @@ class PrescriptionListContent extends StatelessWidget {
   final List prescriptions;
   final String searchText;
   final ValueChanged<String> onSearchChanged;
+  final String token;
+  final WidgetRef ref;
 
   const PrescriptionListContent({
     super.key,
     required this.prescriptions,
     required this.searchText,
     required this.onSearchChanged,
+    required this.token,
+    required this.ref,
   });
 
   @override
@@ -74,11 +81,11 @@ class PrescriptionListContent extends StatelessWidget {
           children: [
             SearchField(onChanged: onSearchChanged),
             const SizedBox(height: 16),
-            const PrescriptionListHeader(),
+            PrescriptionListHeader(token: token, ref: ref),
             if (filteredPrescriptions.isEmpty)
               NotificationContainer(
                 message:
-                    'No tienes recetas registradas . Presiona el botón "Agregar receta" para crear una.',
+                    'No tienes recetas registradas. Presiona el botón "Agregar receta" para crear una.',
                 icon: Icons.error_outline_outlined,
                 backgroundColor: Colors.blue.shade100,
                 textColor: Colors.blue.shade900,
@@ -95,7 +102,13 @@ class PrescriptionListContent extends StatelessWidget {
 }
 
 class PrescriptionListHeader extends StatelessWidget {
-  const PrescriptionListHeader({super.key});
+  final String token;
+  final WidgetRef ref;
+  const PrescriptionListHeader({
+    super.key,
+    required this.token,
+    required this.ref,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -112,8 +125,15 @@ class PrescriptionListHeader extends StatelessWidget {
         RoundedIconButton(
           icon: Icons.add,
           label: 'Agregar receta',
-          onPressed: () {
-            // TODO: Acción para agregar receta
+          onPressed: () async {
+            final prescription = await showCreatePrescriptionDialog(
+              context,
+              token: token,
+            );
+
+            if (prescription != null) {
+              ref.invalidate(prescriptionProvider(token));
+            }
           },
         ),
       ],

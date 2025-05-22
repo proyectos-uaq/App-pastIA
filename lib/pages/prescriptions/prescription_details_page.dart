@@ -3,6 +3,7 @@ import 'package:app_pastia/pages/prescriptions/widgets/prescription_detail_scaff
 import 'package:app_pastia/providers/medications_provider.dart';
 import 'package:app_pastia/providers/prescription_provider.dart';
 import 'package:app_pastia/providers/providers.dart';
+import 'package:app_pastia/services/prescription_service.dart';
 import 'package:app_pastia/widgets/custom_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,13 +35,26 @@ class _PrescriptionDetailPageState
     });
   }
 
-  void _onEditPrescription(dynamic prescription) {
-    // TODO: Acción de editar receta
+  void _onEditPrescription(dynamic prescription) async {
+    final token = ref.read(jwtTokenProvider).valueOrNull;
+    final nuevoNombre = await showEditPrescriptionDialog(
+      context,
+      initialName: prescription.name,
+      prescriptionId: prescription.prescriptionId,
+      token: token!,
+    );
+    if (nuevoNombre != null) {
+      ref.invalidate(
+        prescriptionDetailsProvider((widget.prescriptionId, token)),
+      );
+    }
   }
 
   Future<void> _onDeletePrescription(
     BuildContext context,
+    WidgetRef ref,
     String prescriptionId,
+    String token,
   ) async {
     final confirmed = await showDeleteConfirmationDialog(
       context,
@@ -54,13 +68,35 @@ class _PrescriptionDetailPageState
       cancelColor: Colors.blue.shade600,
     );
     if (confirmed == true) {
-      // TODO: Accion para eliminar receta
-      ScaffoldMessenger.of(
-        // ignore: use_build_context_synchronously
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Receta eliminada')));
-      // ignore: use_build_context_synchronously
-      Navigator.pop(context);
+      var response = await PrescriptionService.deletePrescription(
+        id: prescriptionId,
+        token: token,
+      );
+
+      if (context.mounted) {
+        if (response.error == null) {
+          // Notifica a los providers relacionados
+          ref.invalidate(prescriptionProvider(token));
+          ref.invalidate(prescriptionDetailsProvider((prescriptionId, token)));
+          ref.invalidate(medicationProvider(token));
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Receta eliminada correctamente'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pop(context);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Ocurrió un error: ${response.error}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          // No se cierra la pantalla si falló
+        }
+      }
     }
   }
 
@@ -105,7 +141,9 @@ class _PrescriptionDetailPageState
               prescriptionId: widget.prescriptionId,
               token: token,
               onEditPrescription: _onEditPrescription,
-              onDeletePrescription: _onDeletePrescription,
+              onDeletePrescription:
+                  (context, id) =>
+                      _onDeletePrescription(context, ref, id, token),
               ref: ref,
             );
           },

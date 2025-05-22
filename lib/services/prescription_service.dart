@@ -113,6 +113,8 @@ class PrescriptionService {
     final String prescriptionJson = jsonEncode(prescription.toJson());
     final Uri url = Uri.parse('$API_URL/prescriptions/$id');
 
+    print(prescriptionJson);
+
     try {
       final response = await http.patch(
         url,
