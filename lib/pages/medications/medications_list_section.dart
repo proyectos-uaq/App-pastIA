@@ -2,12 +2,12 @@ import 'package:app_pastia/pages/medications/medication_nav_providers.dart';
 import 'package:app_pastia/pages/medications/widgets/medication_card.dart';
 import 'package:app_pastia/providers/prescription_provider.dart';
 import 'package:app_pastia/providers/providers.dart';
+import 'package:app_pastia/widgets/custom_text_fields.dart';
 import 'package:app_pastia/widgets/notification_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Widget principal que muestra la sección de medicamentos.
-/// Modulariza la lógica para carga, error y muestra de datos.
 class MedicationListSection extends ConsumerWidget {
   final String token;
   const MedicationListSection({super.key, required this.token});
@@ -80,7 +80,7 @@ class MedicationListContent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            MedicationSearchField(onChanged: onSearchChanged),
+            SearchField(onChanged: onSearchChanged),
             const SizedBox(height: 18),
             MedicationListHeader(hasPrescriptions: hasPrescriptions),
             const SizedBox(height: 16),
@@ -107,25 +107,6 @@ class MedicationListContent extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-/// Campo de búsqueda para filtrar medicamentos.
-class MedicationSearchField extends StatelessWidget {
-  final ValueChanged<String> onChanged;
-
-  const MedicationSearchField({super.key, required this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      decoration: InputDecoration(
-        prefixIcon: const Icon(Icons.search),
-        hintText: 'Buscar medicamento por nombre...',
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-      onChanged: onChanged,
     );
   }
 }
@@ -163,8 +144,7 @@ class MedicationListHeader extends StatelessWidget {
               textStyle: const TextStyle(fontSize: 16),
             ),
             onPressed: () {
-              // Acción para crear/abrir formulario de medicamento
-              // Navigator.pushNamed(context, '/crear-medicamento');
+              // TODO: Agregar nuevo medicamento
             },
           ),
       ],

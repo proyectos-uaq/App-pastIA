@@ -3,7 +3,6 @@ import 'package:app_pastia/pages/prescriptions/prescription_details_page.dart';
 import 'package:app_pastia/pages/principal/home_page.dart';
 import 'package:app_pastia/pages/principal/login_page.dart';
 import 'package:app_pastia/pages/principal/register_page.dart';
-import 'package:app_pastia/pages/schedules/update_schedule_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -62,14 +61,6 @@ class MyApp extends StatelessWidget {
                   ? args['medicationId'] as String
                   : '';
           return MedicationDetailsPage(medicationId: medicationId);
-        },
-        '/updateSchedule': (context) {
-          final args = ModalRoute.of(context)!.settings.arguments as Map?;
-          final scheduleId =
-              args != null && args['scheduleId'] != null
-                  ? args['scheduleId'] as String
-                  : '';
-          return UpdateSchedulePage(scheduleId: scheduleId);
         },
       },
       theme: ThemeData(

@@ -1,41 +1,45 @@
 import 'package:flutter/material.dart';
 
 class ErrorScaffold extends StatelessWidget {
+  final String tittle;
   final String message;
-  const ErrorScaffold({required this.message, super.key});
+  const ErrorScaffold({required this.tittle, super.key, required this.message});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.red.shade50,
       appBar: AppBar(
-        title: const Text('Detalle de medicamento'),
+        title: Text('Detalle de $tittle'),
         backgroundColor: Colors.blue,
       ),
       body: Center(
-        child: Text(
-          message,
-          style: const TextStyle(color: Colors.red, fontSize: 16),
-        ),
+        child: Text(message, style: TextStyle(color: Colors.red, fontSize: 16)),
       ),
     );
   }
 }
 
 class NotFoundScaffold extends StatelessWidget {
-  const NotFoundScaffold({super.key});
+  final String tittle;
+  final String message;
+  const NotFoundScaffold({
+    super.key,
+    required this.tittle,
+    required this.message,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.orange.shade50,
       appBar: AppBar(
-        title: const Text('Detalle de medicamento'),
+        title: Text('Detalle de $tittle'),
         backgroundColor: Colors.blue,
       ),
-      body: const Center(
+      body: Center(
         child: Text(
-          "No se pudo encontrar el medicamento.",
+          message,
           style: TextStyle(color: Colors.deepOrange, fontSize: 16),
         ),
       ),
@@ -44,18 +48,24 @@ class NotFoundScaffold extends StatelessWidget {
 }
 
 class NotAvailableScaffold extends StatelessWidget {
-  const NotAvailableScaffold({super.key});
+  final String tittle;
+  final String message;
+  const NotAvailableScaffold({
+    super.key,
+    required this.tittle,
+    required this.message,
+  });
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Detalle de medicamento'),
+        title: Text('Detalle de $tittle'),
         backgroundColor: Colors.blue,
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
       ),
-      body: const Center(child: Text("Token no disponible.")),
+      body: Center(child: Text(message)),
     );
   }
 }

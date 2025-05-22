@@ -1,14 +1,13 @@
 import 'package:app_pastia/pages/prescriptions/prescription_list_section.dart';
+import 'package:app_pastia/pages/prescriptions/prescription_nav_providers.dart';
 import 'package:app_pastia/providers/prescription_provider.dart';
 import 'package:app_pastia/providers/providers.dart';
+import 'package:app_pastia/widgets/error_scaffolds.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
-// Provider para el índice seleccionado en la NavigationBar
-final navBarIndexProvider = StateProvider<int>((ref) => 1);
-// Provider para el texto de búsqueda
-final prescriptionSearchProvider = StateProvider<String>((ref) => '');
-
+/// Página principal de recetas médicas.
+/// Muestra la lista de recetas si el token existe, o mensajes de error/carga.
 class PrescriptionPage extends ConsumerWidget {
   const PrescriptionPage({super.key});
 
@@ -28,10 +27,9 @@ class PrescriptionPage extends ConsumerWidget {
     return tokenAsync.when(
       data: (token) {
         if (token == null) {
-          return const Scaffold(
-            body: Center(child: Text('Ningún token fue encontrado')),
-          );
+          return TokenMissingScaffold();
         }
+
         Widget content;
         if (selectedIndex == 1) {
           content = PrescriptionListSection(token: token);
@@ -44,8 +42,9 @@ class PrescriptionPage extends ConsumerWidget {
           () =>
               const Scaffold(body: Center(child: CircularProgressIndicator())),
       error:
-          (error, stack) =>
-              Scaffold(body: Center(child: Text('Error: $error'))),
+          (error, stack) => ErrorScaffold(
+            error: 'Ocurrió un error al cargar las recetas: $error',
+          ),
     );
   }
 }

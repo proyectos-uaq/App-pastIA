@@ -21,6 +21,7 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
   @override
   void initState() {
     super.initState();
+    // Revalida los datos al entrar
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final token = ref.read(jwtTokenProvider).valueOrNull;
       if (token != null) {
@@ -51,8 +52,8 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
       cancelColor: Colors.blue.shade600,
     );
     if (confirmed == true) {
-      // Aquí deberías llamar a tu provider o método para eliminar el medicamento
-      // Ejemplo: await ref.read(medicationsProvider.notifier).deleteMedication(medicationId);
+      // TODO: Acción para eliminar medicamento
+
       ScaffoldMessenger.of(
         // ignore: use_build_context_synchronously
         context,
@@ -77,7 +78,10 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
     return tokenAsync.when(
       data: (token) {
         if (token == null) {
-          return const NotAvailableScaffold();
+          return const NotAvailableScaffold(
+            tittle: 'medicamento',
+            message: 'No se ha podido obtener el token de acceso',
+          );
         }
         final medicationDetailAsync = ref.watch(
           medicationsDetailProvider((widget.medicationId, token)),
@@ -86,7 +90,10 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
           data: (response) {
             final medication = response.data;
             if (medication == null) {
-              return const NotFoundScaffold();
+              return const NotFoundScaffold(
+                tittle: 'medicamento',
+                message: 'No se ha encontrado el medicamento ',
+              );
             }
             return MedicationDetailScaffold(
               medication: medication,
@@ -98,13 +105,19 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
             );
           },
           loading: () => const LoadingScaffold(),
-          error: (err, stack) => ErrorScaffold(message: "Error: $err"),
+          error:
+              (err, stack) => ErrorScaffold(
+                tittle: "medicamento",
+                message: "Error obteniendo medicamento: $err",
+              ),
         );
       },
       loading: () => const LoadingScaffold(),
       error:
-          (err, stack) =>
-              ErrorScaffold(message: "Error obteniendo token: $err"),
+          (err, stack) => ErrorScaffold(
+            tittle: "medicamento",
+            message: "Error obteniendo token: $err",
+          ),
     );
   }
 }

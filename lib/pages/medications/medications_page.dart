@@ -1,6 +1,7 @@
 import 'package:app_pastia/pages/medications/medications_list_section.dart';
 import 'package:app_pastia/pages/principal/home_page.dart';
 import 'package:app_pastia/providers/providers.dart';
+import 'package:app_pastia/widgets/error_scaffolds.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
@@ -25,13 +26,7 @@ class MedicationsPage extends ConsumerWidget {
     return tokenAsync.when(
       data: (token) {
         if (token == null) {
-          return const Scaffold(
-            body: Center(
-              child: Text(
-                'No se encontró un token de sesión. Por favor inicia sesión nuevamente.',
-              ),
-            ),
-          );
+          return const TokenMissingScaffold();
         }
 
         Widget content;
@@ -44,10 +39,8 @@ class MedicationsPage extends ConsumerWidget {
         return Scaffold(body: content);
       },
       error:
-          (error, stackTrace) => Scaffold(
-            body: Center(
-              child: Text('Ocurrió un error al cargar los datos: $error'),
-            ),
+          (e, stackTrace) => ErrorScaffold(
+            error: 'Ocurrio un error al cargar los medicamentos: $e',
           ),
       loading:
           () =>

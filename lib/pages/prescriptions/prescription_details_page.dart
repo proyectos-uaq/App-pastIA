@@ -1,14 +1,14 @@
-import 'package:app_pastia/pages/prescriptions/widgets/medication_prescription_card.dart';
+import 'package:app_pastia/pages/medications/widgets/detail_scaffolds.dart';
+import 'package:app_pastia/pages/prescriptions/widgets/prescription_detail_scaffold.dart';
 import 'package:app_pastia/providers/prescription_provider.dart';
 import 'package:app_pastia/providers/providers.dart';
+import 'package:app_pastia/widgets/delete_confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
-// --- Widget Principal ---
+// Pagina de detalles de una receta.
 class PrescriptionDetailPage extends ConsumerStatefulWidget {
   final String prescriptionId;
-
   const PrescriptionDetailPage({super.key, required this.prescriptionId});
 
   @override
@@ -35,40 +35,25 @@ class _PrescriptionDetailPageState
 
   void _onEditPrescription(dynamic prescription) {
     // TODO: Acción de editar receta
-    // Navigator.pushNamed(context, '/editar-receta', arguments: prescription);
   }
 
-  void _onDeletePrescription(
+  Future<void> _onDeletePrescription(
     BuildContext context,
     String prescriptionId,
   ) async {
-    // TODO: Acción real de eliminar receta (puedes mostrar un dialog para confirmar)
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder:
-          (ctx) => AlertDialog(
-            title: const Text("Eliminar receta"),
-            content: const Text(
-              "¿Estás seguro que deseas eliminar esta receta?",
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx, false),
-                child: const Text("Cancelar"),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                child: const Text(
-                  "Eliminar",
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
-            ],
-          ),
+    final confirmed = await showDeleteConfirmationDialog(
+      context,
+      title: 'Eliminar receta',
+      message: '¿Estás seguro que deseas eliminar esta receta?',
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+      icon: Icons.delete,
+      iconColor: Colors.redAccent,
+      confirmColor: Colors.red,
+      cancelColor: Colors.blue.shade600,
     );
     if (confirmed == true) {
-      // Aquí deberías llamar a tu provider o método para eliminar la receta
-      // Ejemplo: await ref.read(prescriptionProvider.notifier).deletePrescription(prescriptionId);
+      // TODO: Accion para eliminar receta
       ScaffoldMessenger.of(
         // ignore: use_build_context_synchronously
         context,
@@ -92,322 +77,49 @@ class _PrescriptionDetailPageState
 
     final tokenAsync = ref.watch(jwtTokenProvider);
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.blue,
-        elevation: 0,
-        title: tokenAsync.when(
-          data: (token) {
-            if (token == null) {
-              return const Text("Token no disponible.");
+    return tokenAsync.when(
+      data: (token) {
+        if (token == null) {
+          return const NotAvailableScaffold(
+            tittle: "receta",
+            message: "No se ha podido obtener el token de acceso",
+          );
+        }
+
+        final prescriptionDetailAsync = ref.watch(
+          prescriptionDetailsProvider((widget.prescriptionId, token)),
+        );
+
+        return prescriptionDetailAsync.when(
+          data: (response) {
+            final prescription = response.data;
+            if (prescription == null) {
+              return const NotFoundScaffold(
+                tittle: 'receta',
+                message: 'No se ha encontrado la receta',
+              );
             }
-            final prescriptionDetailAsync = ref.watch(
-              prescriptionDetailsProvider((widget.prescriptionId, token)),
-            );
-            return prescriptionDetailAsync.maybeWhen(
-              data: (response) {
-                final prescription = response.data;
-                return Text(
-                  prescription?.name ?? "Detalle de receta",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                );
-              },
-              orElse:
-                  () => const Text(
-                    "Detalle de receta",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+            return PrescriptionDetailScaffold(
+              prescription: prescription,
+              prescriptionId: widget.prescriptionId,
+              token: token,
+              onEditPrescription: _onEditPrescription,
+              onDeletePrescription: _onDeletePrescription,
+              ref: ref,
             );
           },
-          loading:
-              () => const Text(
-                "Detalle de receta",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+          loading: () => const Center(child: CircularProgressIndicator()),
           error:
-              (err, stack) => const Text(
-                "Detalle de receta",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      body: tokenAsync.when(
-        data: (token) {
-          if (token == null) {
-            return const Center(child: Text("Token no disponible."));
-          }
-          final prescriptionDetailAsync = ref.watch(
-            prescriptionDetailsProvider((widget.prescriptionId, token)),
-          );
-          return prescriptionDetailAsync.when(
-            data: (response) {
-              final prescription = response.data;
-              if (prescription == null) {
-                return const _NotFoundScaffold();
-              }
-              return SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-                  child: _PrescriptionCard(
-                    prescription: prescription,
-                    onEdit: () => _onEditPrescription(prescription),
-                    onDelete:
-                        () => _onDeletePrescription(
-                          context,
-                          prescription.prescriptionId.toString(),
-                        ),
-                  ),
-                ),
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) => _ErrorScaffold(message: "Error: $err"),
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error:
-            (err, stack) =>
-                _ErrorScaffold(message: "Error obteniendo token: $err"),
-      ),
-    );
-  }
-}
-
-// --- Card Única de la Receta con medicamentos ---
-class _PrescriptionCard extends StatelessWidget {
-  final dynamic prescription;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
-
-  const _PrescriptionCard({
-    required this.prescription,
-    required this.onEdit,
-    required this.onDelete,
-  });
-
-  String formatDate(String? isoDate) {
-    if (isoDate == null || isoDate.isEmpty) return 'Sin fecha';
-    try {
-      final date = DateTime.parse(isoDate);
-      return DateFormat('dd/MM/yyyy').format(date);
-    } catch (_) {
-      return 'Sin fecha';
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final meds = prescription.medications;
-    return Card(
-      color: Colors.white,
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Cabecera con icono y datos principales
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blue.shade50,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        // ignore: deprecated_member_use
-                        color: Colors.blue.shade100.withOpacity(0.2),
-                        blurRadius: 12,
-                      ),
-                    ],
-                  ),
-                  padding: const EdgeInsets.all(18),
-                  child: const Icon(
-                    Icons.medical_services_rounded,
-                    color: Color(0xFF1976D2),
-                    size: 38,
-                  ),
-                ),
-                const SizedBox(width: 18),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        prescription.name ?? 'Sin nombre',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 22,
-                          color: Colors.blue.shade800,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.calendar_today,
-                            size: 16,
-                            color: Colors.green,
-                          ),
-                          const SizedBox(width: 7),
-                          Text(
-                            'Creada el: ${formatDate(prescription.createdAt?.toString())}',
-                            style: const TextStyle(fontSize: 15),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.medication,
-                            size: 16,
-                            color: Colors.yellow,
-                          ),
-                          Text(
-                            'Cantidad de medicamentos: ${meds?.length ?? 0}',
-                            style: const TextStyle(fontSize: 15),
-                          ),
-                          const SizedBox(width: 10),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Column(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      tooltip: 'Eliminar receta',
-                      onPressed: onDelete,
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.edit, color: Colors.blue),
-                      tooltip: 'Editar receta',
-                      onPressed: onEdit,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 24),
-
-            // Acciones (Editar / Eliminar) y título "Medicamentos"
-            Row(
-              children: [
-                Text(
-                  'Medicamentos',
-                  style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                ),
-                const Spacer(),
-                ElevatedButton.icon(
-                  icon: Icon(Icons.add, color: Colors.blue.shade900),
-                  label: const Text("Nuevo medicamento"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade100,
-                    foregroundColor: Colors.blue.shade900,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
-                      side: BorderSide(color: Colors.blue.shade100, width: 0),
-                    ),
-                    textStyle: const TextStyle(fontSize: 16),
-                  ),
-                  onPressed: () {
-                    // TODO: Acción para crear/abrir formulario de medicamento
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Lista de medicamentos
-            if (meds == null || meds.isEmpty)
-              Text(
-                'No hay medicamentos registrados.',
-                style: TextStyle(color: Colors.grey),
-              )
-            else
-              Column(
-                children:
-                    meds
-                        .map<Widget>(
-                          (medication) => Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: MedicationPrescriptionCard(
-                              medication: medication,
-                            ),
-                          ),
-                        )
-                        .toList(),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// --- Scaffold para error y para no encontrado ---
-class _ErrorScaffold extends StatelessWidget {
-  final String message;
-  const _ErrorScaffold({required this.message});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.red.shade50,
-      appBar: AppBar(
-        title: const Text('Detalle de receta'),
-        backgroundColor: Colors.blue,
-      ),
-      body: Center(
-        child: Text(
-          message,
-          style: const TextStyle(color: Colors.red, fontSize: 16),
-        ),
-      ),
-    );
-  }
-}
-
-class _NotFoundScaffold extends StatelessWidget {
-  const _NotFoundScaffold();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.orange.shade50,
-      appBar: AppBar(
-        title: const Text('Detalle de receta'),
-        backgroundColor: Colors.blue,
-      ),
-      body: const Center(
-        child: Text(
-          "No se pudo encontrar la receta.",
-          style: TextStyle(color: Colors.deepOrange, fontSize: 16),
-        ),
-      ),
+              (err, stack) =>
+                  ErrorScaffold(tittle: 'receta', message: "Error: $err"),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error:
+          (err, stack) => ErrorScaffold(
+            tittle: 'receta',
+            message: "Error obteniendo token: $err",
+          ),
     );
   }
 }
