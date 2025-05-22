@@ -3,6 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
+String _formatInterval(String? interval) {
+  if (interval == null || interval.isEmpty) return 'No especificada';
+
+  final parts = interval.split(':');
+  if (parts.length != 3) return interval;
+
+  final hours = int.tryParse(parts[0]) ?? 0;
+  final minutes = int.tryParse(parts[1]) ?? 0;
+  final seconds = int.tryParse(parts[2]) ?? 0;
+
+  if (hours > 0) {
+    return '$hours horas'
+        '${minutes > 0 ? ' $minutes minutos' : ''}'
+        '${seconds > 0 ? ' $seconds segundos' : ''}';
+  } else if (minutes > 0) {
+    return '$minutes minutos'
+        '${seconds > 0 ? ' $seconds segundos' : ''}';
+  } else {
+    return '$seconds segundos';
+  }
+}
+
 class MedicationPrescriptionCard extends StatelessWidget {
   final Medication medication;
   const MedicationPrescriptionCard({super.key, required this.medication});
@@ -79,7 +101,7 @@ class MedicationPrescriptionCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Frecuencia: cada ${medication.interval!.split(':')[0]} horas',
+                      'Frecuencia: cada ${_formatInterval(medication.interval)}',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.blueGrey.shade600,

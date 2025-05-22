@@ -1,6 +1,7 @@
 import 'package:app_pastia/pages/medications/widgets/schedule_medication_card.dart';
 import 'package:app_pastia/providers/medications_provider.dart';
 import 'package:app_pastia/providers/providers.dart';
+import 'package:app_pastia/widgets/delete_confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -18,7 +19,6 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
   @override
   void initState() {
     super.initState();
-    // Revalidar los datos al entrar
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final token = ref.read(jwtTokenProvider).valueOrNull;
       if (token != null) {
@@ -33,29 +33,20 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
     // Navigator.pushNamed(context, '/editar-medicamento', arguments: medication);
   }
 
-  void _onDeleteMedication(BuildContext context, String medicationId) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder:
-          (ctx) => AlertDialog(
-            title: const Text("Eliminar medicamento"),
-            content: const Text(
-              "¿Estás seguro que deseas eliminar este medicamento?",
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(ctx, false),
-                child: const Text("Cancelar"),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(ctx, true),
-                child: const Text(
-                  "Eliminar",
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
-            ],
-          ),
+  Future<void> _onDeleteMedication(
+    BuildContext context,
+    String medicationId,
+  ) async {
+    final confirmed = await showDeleteConfirmationDialog(
+      context,
+      title: 'Eliminar medicamento',
+      message: '¿Estás seguro que deseas eliminar este medicamento?',
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+      icon: Icons.delete,
+      iconColor: Colors.redAccent,
+      confirmColor: Colors.red,
+      cancelColor: Colors.blue.shade600,
     );
     if (confirmed == true) {
       // Aquí deberías llamar a tu provider o método para eliminar el medicamento
@@ -77,7 +68,7 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
     }
   }
 
-  String formatInterval(String? interval) {
+  String _formatInterval(String? interval) {
     if (interval == null || interval.isEmpty) return 'No especificada';
 
     final parts = interval.split(':');
@@ -299,7 +290,10 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
                               style: TextStyle(color: Colors.grey),
                             )
                           else
-                            ..._orderedScheduleCards(medication.schedules!),
+                            ..._orderedScheduleCards(
+                              medication.schedules!,
+                              token,
+                            ), // <-- PASA TOKEN AQUÍ
                         ],
                       ),
                     ),
@@ -345,14 +339,15 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
       _DetailRow(label: 'Dosis', value: medication.dosage ?? 'No especificada'),
       _DetailRow(
         label: 'Frecuencia',
-        value: 'Cada ${formatInterval(medication.interval)}',
+        value: 'Cada ${_formatInterval(medication.interval)}',
       ),
       _DetailRow(label: 'Forma', value: medication.form ?? 'No especificada'),
       // Agregar aquí más detalles si los hay
     ];
   }
 
-  List<Widget> _orderedScheduleCards(List schedules) {
+  List<Widget> _orderedScheduleCards(List schedules, String token) {
+    // <-- RECIBE TOKEN AQUÍ
     // Ordenar de menor a mayor por hora (asumiendo formato HH:mm:ss o HH:mm)
     final sorted = List.from(schedules)..sort((a, b) {
       final aTime = a.scheduledTime ?? '';
@@ -363,7 +358,17 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
       return 0;
     });
     return sorted
-        .map<Widget>((schedule) => ScheduleMedicationCard(schedule: schedule))
+        .map<Widget>(
+          (schedule) => ScheduleMedicationCard(
+            schedule: schedule,
+            token: token,
+            onEventUpdated: () {
+              ref.invalidate(
+                medicationsDetailProvider((widget.medicationId, token)),
+              );
+            },
+          ),
+        ) // <-- USA TOKEN AQUÍ
         .toList();
   }
 }

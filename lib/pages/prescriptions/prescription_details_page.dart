@@ -222,8 +222,6 @@ class _PrescriptionCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Cabecera con icono y datos principales
-            const Divider(height: 32, thickness: 2, color: Colors.grey),
-
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -309,7 +307,7 @@ class _PrescriptionCard extends StatelessWidget {
               ],
             ),
 
-            const Divider(height: 32, thickness: 2, color: Colors.grey),
+            const SizedBox(height: 24),
 
             // Acciones (Editar / Eliminar) y título "Medicamentos"
             Row(

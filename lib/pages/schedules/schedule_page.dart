@@ -53,7 +53,13 @@ class SchedulePage extends ConsumerWidget {
                 ...schedules.map<Widget>(
                   (schedule) => Padding(
                     padding: const EdgeInsets.only(bottom: 12),
-                    child: ScheduleCard(schedule: schedule),
+                    child: ScheduleCard(
+                      schedule: schedule,
+                      token: token,
+                      onEventUpdated: () {
+                        ref.invalidate(schedulesProvider(token));
+                      },
+                    ),
                   ),
                 ),
                 if (schedules.isEmpty)
