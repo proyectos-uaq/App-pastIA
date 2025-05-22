@@ -299,10 +299,7 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
                               style: TextStyle(color: Colors.grey),
                             )
                           else
-                            ...medication.schedules!.map(
-                              (schedule) =>
-                                  ScheduleMedicationCard(schedule: schedule),
-                            ),
+                            ..._orderedScheduleCards(medication.schedules!),
                         ],
                       ),
                     ),
@@ -353,6 +350,21 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
       _DetailRow(label: 'Forma', value: medication.form ?? 'No especificada'),
       // Agregar aquí más detalles si los hay
     ];
+  }
+
+  List<Widget> _orderedScheduleCards(List schedules) {
+    // Ordenar de menor a mayor por hora (asumiendo formato HH:mm:ss o HH:mm)
+    final sorted = List.from(schedules)..sort((a, b) {
+      final aTime = a.scheduledTime ?? '';
+      final bTime = b.scheduledTime ?? '';
+      if (aTime.length >= 5 && bTime.length >= 5) {
+        return aTime.compareTo(bTime);
+      }
+      return 0;
+    });
+    return sorted
+        .map<Widget>((schedule) => ScheduleMedicationCard(schedule: schedule))
+        .toList();
   }
 }
 
