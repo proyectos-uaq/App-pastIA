@@ -171,7 +171,15 @@ class PrescriptionDetailScaffold extends StatelessWidget {
                           icon: Icons.add,
                           label: 'Agregar medicamento',
                           onPressed: () {
-                            // TODO : Agregar medicamento
+                            // Navegar a la página de agregar medicamento
+                            Navigator.pushNamed(
+                              context,
+                              '/createMedication',
+                              arguments: {
+                                'token': token,
+                                'prescriptionId': prescription.prescriptionId,
+                              },
+                            );
                           },
                         ),
                       ),

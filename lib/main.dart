@@ -1,4 +1,5 @@
 import 'package:app_pastia/pages/medications/medication_details_page.dart';
+import 'package:app_pastia/pages/medications/create_medication_page.dart';
 import 'package:app_pastia/pages/prescriptions/prescription_details_page.dart';
 import 'package:app_pastia/pages/principal/home_page.dart';
 import 'package:app_pastia/pages/principal/login_page.dart';
@@ -20,6 +21,11 @@ class MyApp extends StatelessWidget {
   Future<bool> hasToken() async {
     final token = await _secureStorage.read(key: 'token');
     return token != null && token.isNotEmpty;
+  }
+
+  // Método para obtener el token, útil para pasar a CreateMedicationPage
+  Future<String?> getToken() async {
+    return await _secureStorage.read(key: 'token');
   }
 
   @override
@@ -61,6 +67,37 @@ class MyApp extends StatelessWidget {
                   ? args['medicationId'] as String
                   : '';
           return MedicationDetailsPage(medicationId: medicationId);
+        },
+        '/createMedication': (context) {
+          // Lee los argumentos
+          final args =
+              ModalRoute.of(context)!.settings.arguments
+                  as Map<String, dynamic>?;
+
+          // Obtiene el token de forma asíncrona
+          return FutureBuilder<String?>(
+            future: _secureStorage.read(key: 'token'),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                );
+              }
+              final token = snapshot.data;
+              if (token == null || token.isEmpty) {
+                return const Scaffold(
+                  body: Center(child: Text('No hay token de sesión')),
+                );
+              }
+              // Obtén prescriptionId de los argumentos (puede ser null)
+              final prescriptionId =
+                  args != null ? args['prescriptionId'] as String? : null;
+              return CreateMedicationPage(
+                token: token,
+                prescriptionId: prescriptionId,
+              );
+            },
+          );
         },
       },
       theme: ThemeData(

@@ -32,6 +32,7 @@ class MedicationListSection extends ConsumerWidget {
               medications: List.from(medicationData.data ?? []),
               searchText: searchText,
               hasPrescriptions: hasPrescriptions,
+              token: token,
               onSearchChanged: (value) {
                 ref.read(medicationSearchProvider.notifier).state = value;
               },
@@ -52,6 +53,7 @@ class MedicationListContent extends StatelessWidget {
   final List medications;
   final String searchText;
   final bool hasPrescriptions;
+  final String token;
   final ValueChanged<String> onSearchChanged;
 
   const MedicationListContent({
@@ -59,6 +61,7 @@ class MedicationListContent extends StatelessWidget {
     required this.medications,
     required this.searchText,
     required this.hasPrescriptions,
+    required this.token,
     required this.onSearchChanged,
   });
 
@@ -83,7 +86,10 @@ class MedicationListContent extends StatelessWidget {
           children: [
             SearchField(onChanged: onSearchChanged),
             const SizedBox(height: 18),
-            MedicationListHeader(hasPrescriptions: hasPrescriptions),
+            MedicationListHeader(
+              hasPrescriptions: hasPrescriptions,
+              token: token,
+            ),
             const SizedBox(height: 16),
             if (!hasPrescriptions)
               NotificationContainer(
@@ -115,28 +121,44 @@ class MedicationListContent extends StatelessWidget {
 /// Encabezado de la lista, muestra el título y el botón para agregar medicamentos si corresponde.
 class MedicationListHeader extends StatelessWidget {
   final bool hasPrescriptions;
+  final String token;
 
-  const MedicationListHeader({super.key, required this.hasPrescriptions});
+  const MedicationListHeader({
+    super.key,
+    required this.hasPrescriptions,
+    required this.token,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          "Tus medicamentos",
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
+        Expanded(
+          child: Text(
+            "Tus medicamentos",
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+            overflow:
+                TextOverflow.ellipsis, // Por si el título se alarga demasiado
           ),
         ),
         if (hasPrescriptions)
-          RoundedIconButton(
-            icon: Icons.add,
-            label: 'Nuevo medicamento',
-            onPressed: () {
-              // TODO: Acción para agregar medicamento
-            },
+          Flexible(
+            child: RoundedIconButton(
+              icon: Icons.add,
+              label: 'Nuevo medicamento',
+              onPressed: () {
+                // Navega a la página de creación de medicamentos
+                Navigator.pushNamed(
+                  context,
+                  '/createMedication',
+                  arguments: {'token': token},
+                );
+              },
+            ),
           ),
       ],
     );
