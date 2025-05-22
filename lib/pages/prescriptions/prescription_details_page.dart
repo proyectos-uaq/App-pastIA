@@ -28,8 +28,54 @@ class _PrescriptionDetailPageState
         ref.invalidate(
           prescriptionDetailsProvider((widget.prescriptionId, token)),
         );
+        ref.invalidate(medicationProvider(token));
       }
     });
+  }
+
+  void _onEditPrescription(dynamic prescription) {
+    // TODO: Acción de editar receta
+    // Navigator.pushNamed(context, '/editar-receta', arguments: prescription);
+  }
+
+  void _onDeletePrescription(
+    BuildContext context,
+    String prescriptionId,
+  ) async {
+    // TODO: Acción real de eliminar receta (puedes mostrar un dialog para confirmar)
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder:
+          (ctx) => AlertDialog(
+            title: const Text("Eliminar receta"),
+            content: const Text(
+              "¿Estás seguro que deseas eliminar esta receta?",
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text("Cancelar"),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text(
+                  "Eliminar",
+                  style: TextStyle(color: Colors.red),
+                ),
+              ),
+            ],
+          ),
+    );
+    if (confirmed == true) {
+      // Aquí deberías llamar a tu provider o método para eliminar la receta
+      // Ejemplo: await ref.read(prescriptionProvider.notifier).deletePrescription(prescriptionId);
+      ScaffoldMessenger.of(
+        // ignore: use_build_context_synchronously
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Receta eliminada')));
+      // ignore: use_build_context_synchronously
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -116,13 +162,14 @@ class _PrescriptionDetailPageState
               return SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _PrescriptionHeader(prescription: prescription),
-                      const SizedBox(height: 28),
-                      _MedicationsSection(prescription: prescription),
-                    ],
+                  child: _PrescriptionCard(
+                    prescription: prescription,
+                    onEdit: () => _onEditPrescription(prescription),
+                    onDelete:
+                        () => _onDeletePrescription(
+                          context,
+                          prescription.prescriptionId.toString(),
+                        ),
                   ),
                 ),
               );
@@ -140,11 +187,17 @@ class _PrescriptionDetailPageState
   }
 }
 
-// --- Cabecera de la receta ---
-class _PrescriptionHeader extends StatelessWidget {
+// --- Card Única de la Receta con medicamentos ---
+class _PrescriptionCard extends StatelessWidget {
   final dynamic prescription;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
 
-  const _PrescriptionHeader({required this.prescription});
+  const _PrescriptionCard({
+    required this.prescription,
+    required this.onEdit,
+    required this.onDelete,
+  });
 
   String formatDate(String? isoDate) {
     if (isoDate == null || isoDate.isEmpty) return 'Sin fecha';
@@ -158,89 +211,107 @@ class _PrescriptionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 18),
-        child: Row(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    // ignore: deprecated_member_use
-                    color: Colors.blue.shade100.withOpacity(0.2),
-                    blurRadius: 12,
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(18),
-              child: const Icon(
-                Icons.medical_services_rounded,
-                color: Color(0xFF1976D2),
-                size: 38,
-              ),
-            ),
-            const SizedBox(width: 18),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    prescription.name ?? 'Sin nombre',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 22,
-                      color: Colors.blue.shade800,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.calendar_today,
-                        size: 16,
-                        color: Colors.green,
-                      ),
-                      const SizedBox(width: 7),
-                      Text(
-                        'Creada el: ${formatDate(prescription.createdAt?.toString())}',
-                        style: const TextStyle(fontSize: 15),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// --- Sección de medicamentos ---
-class _MedicationsSection extends StatelessWidget {
-  final dynamic prescription;
-
-  const _MedicationsSection({required this.prescription});
-
-  @override
-  Widget build(BuildContext context) {
     final meds = prescription.medications;
     return Card(
       color: Colors.white,
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Cabecera con icono y datos principales
+            const Divider(height: 32, thickness: 2, color: Colors.grey),
+
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        // ignore: deprecated_member_use
+                        color: Colors.blue.shade100.withOpacity(0.2),
+                        blurRadius: 12,
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(18),
+                  child: const Icon(
+                    Icons.medical_services_rounded,
+                    color: Color(0xFF1976D2),
+                    size: 38,
+                  ),
+                ),
+                const SizedBox(width: 18),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        prescription.name ?? 'Sin nombre',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 22,
+                          color: Colors.blue.shade800,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.calendar_today,
+                            size: 16,
+                            color: Colors.green,
+                          ),
+                          const SizedBox(width: 7),
+                          Text(
+                            'Creada el: ${formatDate(prescription.createdAt?.toString())}',
+                            style: const TextStyle(fontSize: 15),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.medication,
+                            size: 16,
+                            color: Colors.yellow,
+                          ),
+                          Text(
+                            'Cantidad de medicamentos: ${meds?.length ?? 0}',
+                            style: const TextStyle(fontSize: 15),
+                          ),
+                          const SizedBox(width: 10),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      tooltip: 'Eliminar receta',
+                      onPressed: onDelete,
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      tooltip: 'Editar receta',
+                      onPressed: onEdit,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
+            const Divider(height: 32, thickness: 2, color: Colors.grey),
+
+            // Acciones (Editar / Eliminar) y título "Medicamentos"
             Row(
               children: [
                 Text(
@@ -252,18 +323,17 @@ class _MedicationsSection extends StatelessWidget {
                   icon: Icon(Icons.add, color: Colors.blue.shade900),
                   label: const Text("Nuevo medicamento"),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade50,
+                    backgroundColor: Colors.blue.shade100,
                     foregroundColor: Colors.blue.shade900,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 8,
+                      horizontal: 16,
+                      vertical: 10,
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
-                      side: BorderSide(color: Colors.blue.shade100),
+                      side: BorderSide(color: Colors.blue.shade100, width: 0),
                     ),
-                    textStyle: const TextStyle(fontSize: 15),
-                    elevation: 2,
+                    textStyle: const TextStyle(fontSize: 16),
                   ),
                   onPressed: () {
                     // TODO: Acción para crear/abrir formulario de medicamento
@@ -272,16 +342,12 @@ class _MedicationsSection extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
+
+            // Lista de medicamentos
             if (meds == null || meds.isEmpty)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Text(
-                  'No hay medicamentos en esta receta.',
-                  style: TextStyle(
-                    color: Colors.redAccent,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
+              Text(
+                'No hay medicamentos registrados.',
+                style: TextStyle(color: Colors.grey),
               )
             else
               Column(

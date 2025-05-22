@@ -31,7 +31,12 @@ class MedicationPrescriptionCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         hoverColor: Colors.blue.shade100,
         onTap: () {
-          // Acción al tocar la tarjeta (puedes personalizar)
+          // Navegar a la página de detalles de la medicación
+          Navigator.pushNamed(
+            context,
+            '/medicationDetails',
+            arguments: {'medicationId': medication.medicationId},
+          );
         },
         child: Padding(
           padding: const EdgeInsets.all(16),

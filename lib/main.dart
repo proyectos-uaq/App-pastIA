@@ -1,3 +1,4 @@
+import 'package:app_pastia/pages/medications/medication_details_page.dart';
 import 'package:app_pastia/pages/prescriptions/prescription_details_page.dart';
 import 'package:app_pastia/pages/principal/home_page.dart';
 import 'package:app_pastia/pages/principal/login_page.dart';
@@ -52,6 +53,14 @@ class MyApp extends StatelessWidget {
                   ? args['prescriptionId'] as String
                   : '';
           return PrescriptionDetailPage(prescriptionId: prescriptionId);
+        },
+        '/medicationDetails': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments as Map?;
+          final medicationId =
+              args != null && args['medicationId'] != null
+                  ? args['medicationId'] as String
+                  : '';
+          return MedicationDetailsPage(medicationId: medicationId);
         },
       },
       theme: ThemeData(

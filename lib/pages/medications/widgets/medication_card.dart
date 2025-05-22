@@ -27,7 +27,12 @@ class MedicationCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
         onTap: () {
-          // Acción al tocar la tarjeta (puedes personalizar)
+          // Navegar a la página de detalles de la medicación
+          Navigator.pushNamed(
+            context,
+            '/medicationDetails',
+            arguments: {'medicationId': medication.medicationId},
+          );
         },
         child: Padding(
           padding: const EdgeInsets.all(16),
