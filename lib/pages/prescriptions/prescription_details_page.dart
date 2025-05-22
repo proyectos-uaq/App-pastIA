@@ -37,13 +37,13 @@ class _PrescriptionDetailPageState
 
   void _onEditPrescription(dynamic prescription) async {
     final token = ref.read(jwtTokenProvider).valueOrNull;
-    final nuevoNombre = await showEditPrescriptionDialog(
+    final updatedPrescription = await showEditPrescriptionDialog(
       context,
       initialName: prescription.name,
       prescriptionId: prescription.prescriptionId,
       token: token!,
     );
-    if (nuevoNombre != null) {
+    if (updatedPrescription != null) {
       ref.invalidate(
         prescriptionDetailsProvider((widget.prescriptionId, token)),
       );
