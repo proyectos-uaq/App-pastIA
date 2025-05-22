@@ -1,145 +1,189 @@
-import 'package:app_pastia/pages/medications/medications_page.dart';
+import 'package:app_pastia/pages/medications/medication_nav_providers.dart';
+import 'package:app_pastia/pages/medications/widgets/medication_card.dart';
 import 'package:app_pastia/providers/prescription_provider.dart';
 import 'package:app_pastia/providers/providers.dart';
 import 'package:app_pastia/widgets/notification_container.dart';
-import 'package:app_pastia/pages/medications/widgets/medication_card.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Widget principal que muestra la sección de medicamentos.
+/// Modulariza la lógica para carga, error y muestra de datos.
 class MedicationListSection extends ConsumerWidget {
   final String token;
   const MedicationListSection({super.key, required this.token});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Observa el valor de búsqueda, medicamentos y recetas (prescriptions)
     final searchText = ref.watch(medicationSearchProvider);
     final medicationsAsync = ref.watch(medicationProvider(token));
     final prescriptionsAsync = ref.watch(prescriptionProvider(token));
 
+    // Maneja el estado de recetas (prescriptions)
     return prescriptionsAsync.when(
       data: (prescriptionData) {
         final bool hasPrescriptions = (prescriptionData.data ?? []).isNotEmpty;
+
+        // Si hay recetas, muestra la lista de medicamentos
         return medicationsAsync.when(
-          data: (data) {
-            List medications = List.from(data.data ?? []);
-
-            // Filtrar por búsqueda
-            if (searchText.isNotEmpty) {
-              medications =
-                  medications.where((medication) {
-                    final name = (medication.name ?? '').toLowerCase();
-                    final query = searchText.toLowerCase();
-                    return name.contains(query);
-                  }).toList();
-            }
-
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 16,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Campo de búsqueda
-                    TextField(
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.search),
-                        hintText: 'Buscar medicamento por nombre...',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      onChanged: (value) {
-                        ref.read(medicationSearchProvider.notifier).state =
-                            value;
-                      },
-                    ),
-                    const SizedBox(height: 18),
-                    // Texto arriba de la lista y botón de agregar (condicionado a recetas)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Tus medicamentos",
-                          style: Theme.of(
-                            context,
-                          ).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                        if (hasPrescriptions)
-                          ElevatedButton.icon(
-                            icon: Icon(Icons.add, color: Colors.blue.shade900),
-                            label: const Text("Nuevo medicamento"),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue.shade100,
-                              foregroundColor: Colors.blue.shade900,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 10,
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(50),
-                                side: BorderSide(
-                                  color: Colors.blue.shade100,
-                                  width: 1,
-                                ),
-                              ),
-                              textStyle: const TextStyle(fontSize: 16),
-                            ),
-                            onPressed: () {
-                              // Acción para crear/abrir formulario de medicamento
-                              // Navigator.pushNamed(context, '/crear-medicamento');
-                            },
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    if (!hasPrescriptions)
-                      NotificationContainer(
-                        message:
-                            'Primero debes registrar al menos una receta para poder agregar medicamentos.',
-                        icon: Icons.error_outline,
-                        backgroundColor: Colors.yellow.shade100,
-                        textColor: Colors.yellow.shade900,
-                      ),
-                    if (medications.isEmpty && hasPrescriptions)
-                      NotificationContainer(
-                        message:
-                            'No tienes medicamentos registrados. Presiona el botón "Nuevo medicamento" para agregar uno.',
-                        icon: Icons.error_outline_outlined,
-                        backgroundColor: Colors.blue.shade100,
-                        textColor: Colors.blue.shade900,
-                      ),
-                    ...medications.map<Widget>(
-                      (medication) => MedicationCard(medication: medication),
-                    ),
-                  ],
-                ),
-              ),
+          data: (medicationData) {
+            return MedicationListContent(
+              medications: List.from(medicationData.data ?? []),
+              searchText: searchText,
+              hasPrescriptions: hasPrescriptions,
+              onSearchChanged: (value) {
+                ref.read(medicationSearchProvider.notifier).state = value;
+              },
             );
           },
-          error:
-              (err, stackTrace) => NotificationContainer(
-                message: '$err',
-                icon: Icons.error_outline,
-                backgroundColor: Colors.red.shade100,
-                textColor: Colors.red,
-              ),
+          error: (err, stack) => ErrorNotification(message: '$err'),
           loading: () => const Center(child: CircularProgressIndicator()),
         );
       },
-      error:
-          (error, stackTrace) => NotificationContainer(
-            message: "$error",
-            icon: Icons.error_outline,
-            backgroundColor: Colors.red.shade100,
-            textColor: Colors.red,
-          ),
+      error: (err, stack) => ErrorNotification(message: '$err'),
       loading: () => const Center(child: CircularProgressIndicator()),
+    );
+  }
+}
+
+/// Widget que contiene el contenido principal de la lista de medicamentos.
+class MedicationListContent extends StatelessWidget {
+  final List medications;
+  final String searchText;
+  final bool hasPrescriptions;
+  final ValueChanged<String> onSearchChanged;
+
+  const MedicationListContent({
+    super.key,
+    required this.medications,
+    required this.searchText,
+    required this.hasPrescriptions,
+    required this.onSearchChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Filtra los medicamentos por el texto de búsqueda
+    List filteredMedications = medications;
+    if (searchText.isNotEmpty) {
+      filteredMedications =
+          medications.where((medication) {
+            final name = (medication.name ?? '').toLowerCase();
+            final query = searchText.toLowerCase();
+            return name.contains(query);
+          }).toList();
+    }
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            MedicationSearchField(onChanged: onSearchChanged),
+            const SizedBox(height: 18),
+            MedicationListHeader(hasPrescriptions: hasPrescriptions),
+            const SizedBox(height: 16),
+            if (!hasPrescriptions)
+              NotificationContainer(
+                message:
+                    'Primero debes registrar al menos una receta para poder agregar medicamentos.',
+                icon: Icons.error_outline,
+                backgroundColor: Colors.yellow.shade100,
+                textColor: Colors.yellow.shade900,
+              ),
+            if (filteredMedications.isEmpty && hasPrescriptions)
+              NotificationContainer(
+                message:
+                    'No tienes medicamentos registrados. Presiona el botón "Nuevo medicamento" para agregar uno.',
+                icon: Icons.error_outline_outlined,
+                backgroundColor: Colors.blue.shade100,
+                textColor: Colors.blue.shade900,
+              ),
+            // Lista de tarjetas de medicamentos
+            ...filteredMedications.map<Widget>(
+              (medication) => MedicationCard(medication: medication),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Campo de búsqueda para filtrar medicamentos.
+class MedicationSearchField extends StatelessWidget {
+  final ValueChanged<String> onChanged;
+
+  const MedicationSearchField({super.key, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      decoration: InputDecoration(
+        prefixIcon: const Icon(Icons.search),
+        hintText: 'Buscar medicamento por nombre...',
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      onChanged: onChanged,
+    );
+  }
+}
+
+/// Encabezado de la lista, muestra el título y el botón para agregar medicamentos si corresponde.
+class MedicationListHeader extends StatelessWidget {
+  final bool hasPrescriptions;
+
+  const MedicationListHeader({super.key, required this.hasPrescriptions});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          "Tus medicamentos",
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        if (hasPrescriptions)
+          ElevatedButton.icon(
+            icon: Icon(Icons.add, color: Colors.blue.shade900),
+            label: const Text("Nuevo medicamento"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue.shade100,
+              foregroundColor: Colors.blue.shade900,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50),
+                side: BorderSide(color: Colors.blue.shade100, width: 1),
+              ),
+              textStyle: const TextStyle(fontSize: 16),
+            ),
+            onPressed: () {
+              // Acción para crear/abrir formulario de medicamento
+              // Navigator.pushNamed(context, '/crear-medicamento');
+            },
+          ),
+      ],
+    );
+  }
+}
+
+/// Widget para mostrar mensajes de error en la sección.
+class ErrorNotification extends StatelessWidget {
+  final String message;
+  const ErrorNotification({super.key, required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    return NotificationContainer(
+      message: message,
+      icon: Icons.error_outline,
+      backgroundColor: Colors.red.shade100,
+      textColor: Colors.red,
     );
   }
 }

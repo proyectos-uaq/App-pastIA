@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// Este widget es un contenedor para mostrar notificaciones en la aplicación.
 class NotificationContainer extends StatelessWidget {
   const NotificationContainer({
     super.key,

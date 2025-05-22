@@ -1,13 +1,11 @@
 import 'package:app_pastia/pages/medications/medications_list_section.dart';
+import 'package:app_pastia/pages/principal/home_page.dart';
 import 'package:app_pastia/providers/providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
-// Provider para el índice seleccionado en la NavigationBar
-final navBarIndexProvider = StateProvider<int>((ref) => 2);
-// Provider para el texto de búsqueda de medicamentos
-final medicationSearchProvider = StateProvider<String>((ref) => '');
-
+/// Página principal de medicamentos.
+/// Muestra la lista de medicamentos si el token existe, o mensajes de error/carga.
 class MedicationsPage extends ConsumerWidget {
   const MedicationsPage({super.key});
 
@@ -37,7 +35,6 @@ class MedicationsPage extends ConsumerWidget {
         }
 
         Widget content;
-
         if (selectedIndex == 2) {
           content = MedicationListSection(token: token);
         } else {
