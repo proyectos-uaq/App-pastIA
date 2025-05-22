@@ -84,42 +84,84 @@ class MedicationCard extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 18,
-                        color: Colors.blue.shade800,
+                        color: Colors.black,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      'Dosis: ${medication.dosage}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.blueGrey.shade700,
-                      ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.medical_services,
+                          size: 17,
+                          color: Colors.deepPurple.shade400,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            'Dosis: ${medication.dosage}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.deepPurple.shade700,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      'Forma: ${medication.form}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.blueGrey.shade700,
-                      ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.medication,
+                          size: 17,
+                          color: Colors.indigo.shade400,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            'Forma: ${medication.form}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.indigo.shade700,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      'Frecuencia: cada ${_formatInterval(medication.interval)}',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.blueGrey.shade600,
-                      ),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.schedule,
+                          size: 17,
+                          color: Colors.teal.shade400,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            'Frecuencia: cada ${_formatInterval(medication.interval)}',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.teal.shade700,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 6),
                     Row(
                       children: [
                         Icon(
                           Icons.calendar_today,
-                          size: 15,
+                          size: 16,
                           color: Colors.green.shade400,
                         ),
-                        const SizedBox(width: 5),
+                        const SizedBox(width: 6),
                         Expanded(
                           child: Text(
                             'Fecha de inicio: ${formatDate(medication.startDate)}',

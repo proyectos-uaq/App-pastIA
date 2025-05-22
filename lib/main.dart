@@ -1,5 +1,7 @@
+import 'package:app_pastia/models/medication_model.dart';
 import 'package:app_pastia/pages/medications/medication_details_page.dart';
 import 'package:app_pastia/pages/medications/create_medication_page.dart';
+import 'package:app_pastia/pages/medications/update_medication_page.dart';
 import 'package:app_pastia/pages/prescriptions/prescription_details_page.dart';
 import 'package:app_pastia/pages/principal/home_page.dart';
 import 'package:app_pastia/pages/principal/login_page.dart';
@@ -96,6 +98,37 @@ class MyApp extends StatelessWidget {
                 token: token,
                 prescriptionId: prescriptionId,
               );
+            },
+          );
+        },
+        '/updateMedication': (context) {
+          final args =
+              ModalRoute.of(context)?.settings.arguments
+                  as Map<String, dynamic>?;
+          final Medication? medication = args?['medication'] as Medication?;
+          // Asegúrate de enviar el token en los arguments
+          return FutureBuilder<String?>(
+            future: _secureStorage.read(key: 'token'),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                );
+              }
+              final token = snapshot.data;
+              if (token == null || token.isEmpty) {
+                return const Scaffold(
+                  body: Center(child: Text('No hay token de sesión')),
+                );
+              }
+              if (medication == null) {
+                return const Scaffold(
+                  body: Center(
+                    child: Text('No hay información del medicamento'),
+                  ),
+                );
+              }
+              return UpdateMedicationPage(token: token, medication: medication);
             },
           );
         },

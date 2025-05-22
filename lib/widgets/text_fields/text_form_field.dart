@@ -9,6 +9,7 @@ class CustomTextFormField extends StatefulWidget {
   final bool enabled;
   final TextInputType keyboardType;
   final String? hintText;
+  final String? initialText;
 
   const CustomTextFormField({
     super.key,
@@ -20,6 +21,7 @@ class CustomTextFormField extends StatefulWidget {
     this.enabled = true,
     this.keyboardType = TextInputType.text,
     this.hintText,
+    this.initialText,
   });
 
   @override
@@ -33,6 +35,11 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   void initState() {
     super.initState();
     _obscureText = widget.obscureText;
+
+    // ✅ Solo establecer el texto si el controller está vacío
+    if (widget.initialText != null && widget.controller.text.isEmpty) {
+      widget.controller.text = widget.initialText!;
+    }
   }
 
   void _toggleObscure() {

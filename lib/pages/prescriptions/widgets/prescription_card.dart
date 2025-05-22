@@ -62,7 +62,7 @@ class PrescriptionCard extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
-                        color: Colors.blue.shade900,
+                        color: Colors.black,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -97,23 +97,6 @@ class PrescriptionCard extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-              // Botón de acción (opcional)
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: Colors.black,
-                ),
-                hoverColor: Colors.grey.shade100,
-                iconSize: 24,
-                onPressed: () {
-                  // Acción al presionar el botón (puedes personalizar)
-                  Navigator.pushNamed(
-                    context,
-                    '/prescriptionDetails',
-                    arguments: {'prescriptionId': prescription.prescriptionId},
-                  );
-                },
               ),
             ],
           ),

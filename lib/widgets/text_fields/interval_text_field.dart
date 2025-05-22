@@ -3,10 +3,19 @@ import 'package:flutter/material.dart';
 
 class IntervalTextFormField extends StatelessWidget {
   final TextEditingController controller;
-  const IntervalTextFormField({super.key, required this.controller});
+  final String? initialText;
+  const IntervalTextFormField({
+    super.key,
+    required this.controller,
+    this.initialText,
+  });
 
   @override
   Widget build(BuildContext context) {
+    if (initialText != null && controller.text.isEmpty) {
+      controller.text = initialText!;
+    }
+
     return TextFormField(
       controller: controller,
       decoration: const InputDecoration(

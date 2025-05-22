@@ -33,8 +33,11 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
   }
 
   void _onEditMedication(dynamic medication) {
-    // TODO: Acción para editar medicamento
-    // Navigator.pushNamed(context, '/editar-medicamento', arguments: medication);
+    Navigator.pushNamed(
+      context,
+      '/updateMedication',
+      arguments: {'medication': medication},
+    );
   }
 
   Future<void> _onDeleteMedication(
