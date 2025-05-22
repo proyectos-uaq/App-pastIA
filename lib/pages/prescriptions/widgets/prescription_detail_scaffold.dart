@@ -96,11 +96,14 @@ class PrescriptionDetailScaffold extends StatelessWidget {
                                   color: Colors.green,
                                 ),
                                 const SizedBox(width: 7),
-                                Text(
-                                  'Creada el: ${formatDate(prescription.createdAt.toString())}',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.grey.shade700,
+                                Expanded(
+                                  child: Text(
+                                    'Creada el: ${formatDate(prescription.createdAt.toString())}',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                               ],
@@ -114,14 +117,16 @@ class PrescriptionDetailScaffold extends StatelessWidget {
                                   color: Colors.yellow,
                                 ),
                                 const SizedBox(width: 7),
-                                Text(
-                                  'Cantidad de medicamentos: ${prescription.medications?.length ?? 0}',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.grey.shade700,
+                                Expanded(
+                                  child: Text(
+                                    'Cantidad de medicamentos: ${prescription.medications?.length ?? 0}',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.grey.shade700,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                const SizedBox(width: 10),
                               ],
                             ),
                           ],
@@ -149,24 +154,30 @@ class PrescriptionDetailScaffold extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Medicamentos',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
+                      const Expanded(
+                        child: Text(
+                          'Medicamentos',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          overflow: TextOverflow.ellipsis, // Por si acaso
                         ),
                       ),
-                      const Spacer(),
-                      RoundedIconButton(
-                        icon: Icons.add,
-                        label: 'Agregar medicamento',
-                        onPressed: () {
-                          // TODO : Agregar medicamento
-                        },
+                      Flexible(
+                        child: RoundedIconButton(
+                          icon: Icons.add,
+                          label: 'Agregar medicamento',
+                          onPressed: () {
+                            // TODO : Agregar medicamento
+                          },
+                        ),
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 10),
                   if (prescription.medications == null ||
                       prescription.medications!.isEmpty)

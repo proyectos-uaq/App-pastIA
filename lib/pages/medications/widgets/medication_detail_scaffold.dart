@@ -92,17 +92,21 @@ class MedicationDetailScaffold extends StatelessWidget {
                             const SizedBox(height: 8),
                             Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.calendar_today,
-                                  size: 16,
-                                  color: Colors.green,
+                                  size: 15,
+                                  color: Colors.green.shade400,
                                 ),
-                                const SizedBox(width: 7),
-                                Text(
-                                  'Fecha de inicio: ${formatDate(medication.startDate)}',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.grey.shade700,
+                                const SizedBox(width: 5),
+                                Expanded(
+                                  child: Text(
+                                    'Fecha de inicio: ${formatDate(medication.startDate)}',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.green.shade700,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
                                   ),
                                 ),
                               ],
@@ -135,30 +139,35 @@ class MedicationDetailScaffold extends StatelessWidget {
                   ..._medicationDetailsList(medication),
                   const SizedBox(height: 20),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
-                        'Horarios de toma',
+                        'Horarios',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const Spacer(),
-                      RoundedIconButton(
-                        icon: Icons.add,
-                        label: 'Nuevo horario',
-                        onPressed: () async {
-                          final created = await CreateTimeDialog.show(
-                            context,
-                            token: token,
-                            medicationId: medication.medicationId,
-                          );
-                          if (created == true) {
-                            ref.invalidate(
-                              medicationsDetailProvider((medicationId, token)),
+                      Flexible(
+                        child: RoundedIconButton(
+                          icon: Icons.add,
+                          label: 'Nuevo horario',
+                          onPressed: () async {
+                            final created = await CreateTimeDialog.show(
+                              context,
+                              token: token,
+                              medicationId: medication.medicationId,
                             );
-                          }
-                        },
+                            if (created == true) {
+                              ref.invalidate(
+                                medicationsDetailProvider((
+                                  medicationId,
+                                  token,
+                                )),
+                              );
+                            }
+                          },
+                        ),
                       ),
                     ],
                   ),

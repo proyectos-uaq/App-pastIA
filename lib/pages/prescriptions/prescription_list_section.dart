@@ -115,26 +115,31 @@ class PrescriptionListHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          "Tus recetas",
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
+        Expanded(
+          child: Text(
+            "Tus recetas",
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+            overflow: TextOverflow.ellipsis, // Por si el texto es muy largo
           ),
         ),
-        RoundedIconButton(
-          icon: Icons.add,
-          label: 'Agregar receta',
-          onPressed: () async {
-            final prescription = await showCreatePrescriptionDialog(
-              context,
-              token: token,
-            );
+        Flexible(
+          child: RoundedIconButton(
+            icon: Icons.add,
+            label: 'Agregar receta',
+            onPressed: () async {
+              final prescription = await showCreatePrescriptionDialog(
+                context,
+                token: token,
+              );
 
-            if (prescription != null) {
-              ref.invalidate(prescriptionProvider(token));
-            }
-          },
+              if (prescription != null) {
+                ref.invalidate(prescriptionProvider(token));
+              }
+            },
+          ),
         ),
       ],
     );

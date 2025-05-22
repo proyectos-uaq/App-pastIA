@@ -120,11 +120,15 @@ class MedicationCard extends StatelessWidget {
                           color: Colors.green.shade400,
                         ),
                         const SizedBox(width: 5),
-                        Text(
-                          'Fecha de inicio: ${formatDate(medication.startDate)}',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: Colors.green.shade700,
+                        Expanded(
+                          child: Text(
+                            'Fecha de inicio: ${formatDate(medication.startDate)}',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.green.shade700,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
                           ),
                         ),
                       ],
@@ -132,14 +136,6 @@ class MedicationCard extends StatelessWidget {
                   ],
                 ),
               ),
-              // Botón de acción (opcional)
-              // Este boton puede ser para ver mas detalles
-              // IconButton(
-              //   icon: Icon(Icons.info_outline, color: Colors.grey),
-              //   onPressed: () {
-              //     // Acción al tocar el botón (puedes personalizar)
-              //   },
-              // ),
             ],
           ),
         ),
