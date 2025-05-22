@@ -53,7 +53,7 @@ class PrescriptionDetailScaffold extends StatelessWidget {
                 children: [
                   // Header con icono y datos principales
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
                         decoration: BoxDecoration(
@@ -101,7 +101,7 @@ class PrescriptionDetailScaffold extends StatelessWidget {
                                     'Creada el: ${formatDate(prescription.createdAt.toString())}',
                                     style: TextStyle(
                                       fontSize: 15,
-                                      color: Colors.grey.shade700,
+                                      color: Colors.black,
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -122,7 +122,7 @@ class PrescriptionDetailScaffold extends StatelessWidget {
                                     'Cantidad de medicamentos: ${prescription.medications?.length ?? 0}',
                                     style: TextStyle(
                                       fontSize: 15,
-                                      color: Colors.grey.shade700,
+                                      color: Colors.black,
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -275,7 +275,7 @@ class _MedicationCard extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 18,
-                        color: Colors.blue.shade800,
+                        color: Colors.black,
                       ),
                     ),
                     const SizedBox(height: 4),

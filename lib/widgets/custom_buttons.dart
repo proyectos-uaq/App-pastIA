@@ -57,7 +57,8 @@ class RoundedIconButton extends StatelessWidget {
               child: Text(
                 label,
                 overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+                softWrap: false,
+                maxLines: 2,
                 style: TextStyle(fontSize: fontSize),
               ),
             ),

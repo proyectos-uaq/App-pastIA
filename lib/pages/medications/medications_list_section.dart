@@ -103,7 +103,7 @@ class MedicationListContent extends StatelessWidget {
             if (filteredMedications.isEmpty && hasPrescriptions)
               NotificationContainer(
                 message:
-                    'No tienes medicamentos registrados. Presiona el botón "Nuevo medicamento" para agregar uno.',
+                    'No tienes medicamentos registrados. Presiona el botón "Agregar medicamento" para agregar uno.',
                 icon: Icons.error_outline_outlined,
                 backgroundColor: Colors.blue.shade100,
                 textColor: Colors.blue.shade900,
@@ -150,7 +150,7 @@ class MedicationListHeader extends StatelessWidget {
           Flexible(
             child: RoundedIconButton(
               icon: Icons.add,
-              label: 'Nuevo medicamento',
+              label: 'Agregar medicamento',
               onPressed: () {
                 // Navega a la página de creación de medicamentos
                 Navigator.pushNamed(

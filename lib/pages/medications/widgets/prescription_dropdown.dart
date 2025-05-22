@@ -31,7 +31,7 @@ class PrescriptionDropdown extends StatelessWidget {
               value == null || value.isEmpty ? 'Selecciona una receta' : null,
       decoration: const InputDecoration(
         labelText: 'Receta',
-        hintText: 'Elige la receta a la que pertenecerá el medicamento',
+        hintText: 'Selecciona una receta',
         border: OutlineInputBorder(),
       ),
     );
