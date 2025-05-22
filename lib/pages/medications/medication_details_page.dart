@@ -1,6 +1,7 @@
 import 'package:app_pastia/pages/medications/widgets/medication_detail_scaffold.dart';
 import 'package:app_pastia/providers/medications_provider.dart';
 import 'package:app_pastia/providers/providers.dart';
+import 'package:app_pastia/services/medication_service.dart';
 import 'package:app_pastia/widgets/custom_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -52,14 +53,34 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
       cancelColor: Colors.blue.shade600,
     );
     if (confirmed == true) {
-      // TODO: Acción para eliminar medicamento
+      final token = ref.read(jwtTokenProvider).valueOrNull;
 
-      ScaffoldMessenger.of(
-        // ignore: use_build_context_synchronously
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Medicamento eliminado')));
-      // ignore: use_build_context_synchronously
-      Navigator.pop(context);
+      var response = await MedicationService.deleteMedication(
+        id: medicationId,
+        token: token!,
+      );
+      if (context.mounted) {
+        if (response.error == null) {
+          // Notifica a los providers relacionados
+          ref.invalidate(medicationProvider(token));
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Receta eliminada correctamente'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pop(context);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Ocurrió un error: ${response.error}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+          // No se cierra la pantalla si falló
+        }
+      }
     }
   }
 

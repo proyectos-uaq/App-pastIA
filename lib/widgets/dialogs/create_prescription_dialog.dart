@@ -7,7 +7,7 @@ Future<String?> showCreatePrescriptionDialog(
   required String token,
 }) {
   final TextEditingController nameController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   bool saving = false;
 
   return showDialog<String>(
@@ -29,7 +29,7 @@ Future<String?> showCreatePrescriptionDialog(
               ],
             ),
             content: Form(
-              key: _formKey,
+              key: formKey,
               child: TextFormField(
                 controller: nameController,
                 decoration: const InputDecoration(
@@ -77,7 +77,7 @@ Future<String?> showCreatePrescriptionDialog(
                         saving
                             ? null
                             : () async {
-                              if (_formKey.currentState!.validate()) {
+                              if (formKey.currentState!.validate()) {
                                 setState(() => saving = true);
 
                                 Prescription prescription = Prescription(

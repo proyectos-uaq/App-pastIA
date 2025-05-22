@@ -16,6 +16,7 @@ Future<bool?> showDeleteConfirmationDialog(
     barrierDismissible: false,
     builder: (context) {
       return AlertDialog(
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         title: Row(
           children: [
