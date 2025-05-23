@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:past_ia/api/constants.dart';
 import 'package:http/http.dart' as http;
-import 'package:past_ia/utils/time_out_exception.dart';
+import 'package:past_ia/utils/safe_request.dart';
 
 import '../models/response_model.dart';
 import '../models/user_model.dart';

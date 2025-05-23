@@ -103,7 +103,7 @@ class EditTimeDialog {
                           ? const SizedBox(
                             width: 16,
                             height: 16,
-                            child: MyCustomLoader(),
+                            child: ButtonProgressIndicator(),
                           )
                           : const Icon(Icons.save, color: Colors.white),
                   label: Text(

@@ -145,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                               ? const SizedBox(
                                 width: 20,
                                 height: 20,
-                                child: MyCustomLoader(),
+                                child: ButtonProgressIndicator(),
                               )
                               : const Text(
                                 'Iniciar Sesión',

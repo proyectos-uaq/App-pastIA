@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:past_ia/api/constants.dart';
-import 'package:past_ia/utils/time_out_exception.dart';
+import 'package:past_ia/utils/safe_request.dart';
 
 import '../models/intake_model.dart';
 import '../models/response_model.dart';
@@ -30,8 +30,9 @@ class ScheduleService {
         jsonBody,
         fromData: (data) => Schedule.fromJson(data),
       );
-    } on TimeoutException {
-      return _timeoutResponse<Schedule>();
+    } on TimeoutException catch (e) {
+      print('TimeoutException: $e');
+      throw e;
     } catch (e) {
       return _errorResponse<Schedule>(e);
     }
@@ -59,8 +60,8 @@ class ScheduleService {
         jsonBody,
         fromData: (data) => Schedule.fromJson(data),
       );
-    } on TimeoutException {
-      return _timeoutResponse<Schedule>();
+    } on TimeoutException catch (e) {
+      throw e;
     } catch (e) {
       return _errorResponse<Schedule>(e);
     }
@@ -83,8 +84,8 @@ class ScheduleService {
         jsonBody,
         fromData: (data) => Schedule.fromJson(data),
       );
-    } on TimeoutException {
-      return _timeoutResponse<Schedule>();
+    } on TimeoutException catch (e) {
+      throw e;
     } catch (e) {
       return _errorResponse<Schedule>(e);
     }
@@ -109,8 +110,8 @@ class ScheduleService {
             (data) =>
                 (data as List).map((item) => Intake.fromJson(item)).toList(),
       );
-    } on TimeoutException {
-      return _timeoutResponse<List<Intake>>();
+    } on TimeoutException catch (e) {
+      throw e;
     } catch (e) {
       return _errorResponse<List<Intake>>(e);
     }
@@ -134,8 +135,8 @@ class ScheduleService {
             (data) =>
                 (data as List).map((item) => Schedule.fromJson(item)).toList(),
       );
-    } on TimeoutException {
-      return _timeoutResponse<List<Schedule>>();
+    } on TimeoutException catch (e) {
+      throw e;
     } catch (e) {
       return _errorResponse<List<Schedule>>(e);
     }
@@ -154,12 +155,5 @@ class ScheduleService {
     message: 'Ocurrió un error inesperado.',
     statusCode: 500,
     error: e.toString(),
-  );
-
-  static ApiResponse<T> _timeoutResponse<T>() => ApiResponse<T>(
-    data: null,
-    message: 'La solicitud tardó demasiado. Intenta de nuevo.',
-    statusCode: 408,
-    error: 'Timeout',
   );
 }

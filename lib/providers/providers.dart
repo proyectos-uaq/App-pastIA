@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:past_ia/services/auth_service.dart';
 import 'package:past_ia/services/schedule_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,15 +15,20 @@ void handleServerError(ApiResponse response) {
   }
 }
 
-final schedulesProvider =
-    FutureProvider.family<ApiResponse<List<Schedule>>, String>((
-      ref,
-      token,
-    ) async {
-      var response = await ScheduleService.getSchedules(token: token);
-      handleServerError(response);
-      return response;
-    });
+final schedulesProvider = FutureProvider.family<
+  ApiResponse<List<Schedule>>,
+  String
+>((ref, token) async {
+  final response = await ScheduleService.getSchedules(token: token);
+
+  // Si el error es un timeout, lanza una excepción (esto hará que Riverpod detecte el error)
+  if (response.statusCode == 408 || response.error == 'Timeout') {
+    throw TimeoutException(response.message);
+  }
+
+  handleServerError(response);
+  return response;
+});
 
 // Provider para actualizar los providers automáticamente
 final autoRefreshProvider = StreamProvider<void>((ref) async* {

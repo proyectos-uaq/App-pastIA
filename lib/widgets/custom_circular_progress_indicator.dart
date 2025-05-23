@@ -10,8 +10,8 @@ class MyCustomLoader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: SizedBox(
-        height: 120,
-        width: 120,
+        height: 80,
+        width: 80,
         child: Transform(
           alignment: Alignment.center,
           transform: Matrix4.rotationY(math.pi),
@@ -31,6 +31,18 @@ class MyCustomLoader extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ButtonProgressIndicator extends StatelessWidget {
+  const ButtonProgressIndicator({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const CircularProgressIndicator(
+      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      strokeWidth: 2,
     );
   }
 }

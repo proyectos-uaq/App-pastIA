@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:past_ia/api/constants.dart';
 import 'package:http/http.dart' as http;
-import 'package:past_ia/utils/time_out_exception.dart';
+import 'package:past_ia/utils/safe_request.dart';
 
 import '../models/medication_model.dart';
 import '../models/response_model.dart';
@@ -33,13 +33,9 @@ class MedicationService {
         jsonBody,
         fromData: (data) => Medication.fromJson(data),
       );
-    } on TimeoutException {
-      return ApiResponse<Medication>(
-        data: null,
-        message: 'La solicitud tardó demasiado. Intenta de nuevo.',
-        statusCode: 408,
-        error: 'Timeout',
-      );
+    } on TimeoutException catch (e) {
+      // Relanza el TimeoutException para que el provider pueda atraparlo si lo desea
+      throw e;
     } catch (e) {
       return ApiResponse<Medication>(
         data: null,
@@ -76,13 +72,8 @@ class MedicationService {
                     .map((item) => Medication.fromJson(item))
                     .toList(),
       );
-    } on TimeoutException {
-      return ApiResponse<List<Medication>>(
-        data: null,
-        message: 'La solicitud tardó demasiado. Intenta de nuevo.',
-        statusCode: 408,
-        error: 'Timeout',
-      );
+    } on TimeoutException catch (e) {
+      throw e;
     } catch (e) {
       return ApiResponse<List<Medication>>(
         data: null,
@@ -116,13 +107,8 @@ class MedicationService {
         jsonBody,
         fromData: (data) => Medication.fromJson(data),
       );
-    } on TimeoutException {
-      return ApiResponse<Medication>(
-        data: null,
-        message: 'La solicitud tardó demasiado. Intenta de nuevo.',
-        statusCode: 408,
-        error: 'Timeout',
-      );
+    } on TimeoutException catch (e) {
+      throw e;
     } catch (e) {
       return ApiResponse<Medication>(
         data: null,
@@ -158,13 +144,8 @@ class MedicationService {
         jsonBody,
         fromData: (data) => Medication.fromJson(data),
       );
-    } on TimeoutException {
-      return ApiResponse<Medication>(
-        data: null,
-        message: 'La solicitud tardó demasiado. Intenta de nuevo.',
-        statusCode: 408,
-        error: 'Timeout',
-      );
+    } on TimeoutException catch (e) {
+      throw e;
     } catch (e) {
       return ApiResponse<Medication>(
         data: null,
@@ -198,13 +179,8 @@ class MedicationService {
         jsonBody,
         fromData: (data) => data is Map ? data['message'] ?? '' : '',
       );
-    } on TimeoutException {
-      return ApiResponse<String>(
-        data: null,
-        message: 'La solicitud tardó demasiado. Intenta de nuevo.',
-        statusCode: 408,
-        error: 'Timeout',
-      );
+    } on TimeoutException catch (e) {
+      throw e;
     } catch (e) {
       return ApiResponse<String>(
         data: null,
@@ -240,13 +216,8 @@ class MedicationService {
             (data) =>
                 (data as List).map((item) => Schedule.fromJson(item)).toList(),
       );
-    } on TimeoutException {
-      return ApiResponse<List<Schedule>>(
-        data: null,
-        message: 'La solicitud tardó demasiado. Intenta de nuevo.',
-        statusCode: 408,
-        error: 'Timeout',
-      );
+    } on TimeoutException catch (e) {
+      throw e;
     } catch (e) {
       return ApiResponse<List<Schedule>>(
         data: null,

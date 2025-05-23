@@ -166,7 +166,7 @@ class _CreateMedicationFormState extends ConsumerState<CreateMedicationForm> {
                               ? const SizedBox(
                                 width: 20,
                                 height: 20,
-                                child: MyCustomLoader(),
+                                child: ButtonProgressIndicator(),
                               )
                               : const Icon(Icons.add, color: Colors.white),
                       label: Padding(

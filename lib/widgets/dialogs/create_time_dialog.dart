@@ -93,7 +93,7 @@ class CreateTimeDialog {
                           ? const SizedBox(
                             width: 16,
                             height: 16,
-                            child: MyCustomLoader(),
+                            child: ButtonProgressIndicator(),
                           )
                           : const Icon(Icons.add, color: Colors.white),
                   label: Text(

@@ -6,7 +6,7 @@ import 'package:past_ia/models/response_model.dart';
 import 'package:past_ia/models/user_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:past_ia/utils/time_out_exception.dart';
+import 'package:past_ia/utils/safe_request.dart';
 
 class AuthService {
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
