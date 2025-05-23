@@ -1,5 +1,6 @@
 import 'package:app_pastia/pages/medications/widgets/medication_detail_scaffold.dart';
 import 'package:app_pastia/providers/medications_provider.dart';
+import 'package:app_pastia/providers/prescription_provider.dart';
 import 'package:app_pastia/providers/providers.dart';
 import 'package:app_pastia/services/medication_service.dart';
 import 'package:app_pastia/widgets/custom_dialogs.dart';
@@ -64,7 +65,21 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
       );
       if (context.mounted) {
         if (response.error == null) {
-          // Notifica a los providers relacionados
+          // Obtén el detalle del medicamento desde el provider para acceder al prescriptionId
+          final medicationDetail =
+              ref
+                  .read(medicationsDetailProvider((medicationId, token)))
+                  .value
+                  ?.data; // Ajusta según tu ApiResponse
+
+          final prescriptionId = medicationDetail?.prescriptionId;
+
+          if (prescriptionId != null) {
+            ref.invalidate(
+              prescriptionDetailsProvider((prescriptionId, token)),
+            );
+          }
+
           ref.invalidate(medicationProvider(token));
 
           ScaffoldMessenger.of(context).showSnackBar(
@@ -81,7 +96,6 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
               backgroundColor: Colors.red,
             ),
           );
-          // No se cierra la pantalla si falló
         }
       }
     }
@@ -93,7 +107,6 @@ class _MedicationDetailsPageState extends ConsumerState<MedicationDetailsPage> {
       final token = ref.read(jwtTokenProvider).valueOrNull;
       if (token != null) {
         ref.invalidate(medicationsDetailProvider((widget.medicationId, token)));
-        ref.invalidate(schedulesProvider(token));
       }
     });
 
