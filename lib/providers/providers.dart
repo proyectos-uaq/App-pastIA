@@ -1,5 +1,5 @@
-import 'package:app_pastia/services/auth_service.dart';
-import 'package:app_pastia/services/schedule_service.dart';
+import 'package:past_ia/services/auth_service.dart';
+import 'package:past_ia/services/schedule_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/schedule_model.dart';
 import '../models/response_model.dart';

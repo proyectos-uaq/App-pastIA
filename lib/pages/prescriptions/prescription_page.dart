@@ -1,8 +1,9 @@
-import 'package:app_pastia/pages/prescriptions/prescription_list_section.dart';
-import 'package:app_pastia/pages/prescriptions/prescription_nav_providers.dart';
-import 'package:app_pastia/providers/prescription_provider.dart';
-import 'package:app_pastia/providers/providers.dart';
-import 'package:app_pastia/widgets/error_scaffolds.dart';
+import 'package:past_ia/pages/prescriptions/prescription_list_section.dart';
+import 'package:past_ia/pages/prescriptions/prescription_nav_providers.dart';
+import 'package:past_ia/providers/prescription_provider.dart';
+import 'package:past_ia/providers/providers.dart';
+import 'package:past_ia/widgets/custom_circular_progress_indicator.dart';
+import 'package:past_ia/widgets/error_scaffolds.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
@@ -38,9 +39,7 @@ class PrescriptionPage extends ConsumerWidget {
         }
         return Scaffold(body: content);
       },
-      loading:
-          () =>
-              const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () => const Scaffold(body: Center(child: MyCustomLoader())),
       error:
           (error, stack) => ErrorScaffold(
             error: 'Ocurrió un error al cargar las recetas: $error',

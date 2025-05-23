@@ -1,4 +1,4 @@
-import 'package:app_pastia/models/prescription_model.dart';
+import 'package:past_ia/models/prescription_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

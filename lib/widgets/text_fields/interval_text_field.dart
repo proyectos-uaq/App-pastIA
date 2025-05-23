@@ -1,4 +1,4 @@
-import 'package:app_pastia/utils/interval_validator.dart';
+import 'package:past_ia/utils/interval_validator.dart';
 import 'package:flutter/material.dart';
 
 class IntervalTextFormField extends StatelessWidget {

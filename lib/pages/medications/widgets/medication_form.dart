@@ -1,9 +1,10 @@
-import 'package:app_pastia/models/medication_model.dart';
-import 'package:app_pastia/pages/medications/widgets/prescription_dropdown.dart';
-import 'package:app_pastia/providers/medications_provider.dart';
-import 'package:app_pastia/providers/prescription_provider.dart';
-import 'package:app_pastia/services/medication_service.dart';
-import 'package:app_pastia/widgets/custom_text_fields.dart';
+import 'package:past_ia/models/medication_model.dart';
+import 'package:past_ia/pages/medications/widgets/prescription_dropdown.dart';
+import 'package:past_ia/providers/medications_provider.dart';
+import 'package:past_ia/providers/prescription_provider.dart';
+import 'package:past_ia/services/medication_service.dart';
+import 'package:past_ia/widgets/custom_circular_progress_indicator.dart';
+import 'package:past_ia/widgets/custom_text_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -165,10 +166,7 @@ class _CreateMedicationFormState extends ConsumerState<CreateMedicationForm> {
                               ? const SizedBox(
                                 width: 20,
                                 height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
+                                child: MyCustomLoader(),
                               )
                               : const Icon(Icons.add, color: Colors.white),
                       label: Padding(
@@ -186,6 +184,7 @@ class _CreateMedicationFormState extends ConsumerState<CreateMedicationForm> {
                         foregroundColor: Colors.white,
                         minimumSize: const Size.fromHeight(50),
                         elevation: 2,
+                        // ignore: deprecated_member_use
                         shadowColor: Colors.blueAccent.withOpacity(0.2),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),

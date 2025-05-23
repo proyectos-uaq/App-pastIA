@@ -1,12 +1,13 @@
-import 'package:app_pastia/pages/medications/medications_page.dart';
-import 'package:app_pastia/pages/prescriptions/prescription_page.dart';
-import 'package:app_pastia/pages/schedules/schedule_page.dart';
-import 'package:app_pastia/pages/principal/settings_page.dart';
-import 'package:app_pastia/providers/providers.dart';
-import 'package:app_pastia/pages/principal/widgets/home_app_bar.dart';
+import 'package:past_ia/pages/medications/medications_page.dart';
+import 'package:past_ia/pages/prescriptions/prescription_page.dart';
+import 'package:past_ia/pages/schedules/schedule_page.dart';
+import 'package:past_ia/pages/principal/settings_page.dart';
+import 'package:past_ia/providers/providers.dart';
+import 'package:past_ia/pages/principal/widgets/home_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:past_ia/widgets/custom_circular_progress_indicator.dart';
 
 final navBarIndexProvider = StateProvider<int>((ref) => 0);
 
@@ -92,9 +93,7 @@ class HomePage extends ConsumerWidget {
           ),
         );
       },
-      loading:
-          () =>
-              const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () => const Scaffold(body: Center(child: MyCustomLoader())),
       error:
           (err, stack) => Scaffold(
             body: Center(child: Text('Error al obtener el token: $err')),

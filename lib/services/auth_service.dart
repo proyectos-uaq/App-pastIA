@@ -1,10 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:app_pastia/api/constants.dart';
-import 'package:app_pastia/models/response_model.dart';
-import 'package:app_pastia/models/user_model.dart';
+import 'package:past_ia/api/constants.dart';
+import 'package:past_ia/models/response_model.dart';
+import 'package:past_ia/models/user_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:past_ia/utils/time_out_exception.dart';
 
 class AuthService {
   final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
@@ -14,20 +16,30 @@ class AuthService {
     final Uri url = Uri.parse('$API_URL/auth/login');
 
     try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: userJson,
+      final response = await safeRequest(
+        http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: userJson,
+        ),
       );
 
-      final jsonBody = jsonDecode(response.body);
+      final jsonBody = jsonDecode(response!.body);
 
       return ApiResponse<String>.fromJson(
         jsonBody,
         fromData: (data) => data['token'] ?? '', // Extraemos el token del login
+      );
+    } on TimeoutException {
+      return ApiResponse<String>(
+        data: null,
+        message:
+            'El servidor tardó demasiado en responder. Intenta de nuevo mas tarde.',
+        statusCode: 408,
+        error: 'Timeout',
       );
     } catch (e) {
       return ApiResponse<String>(
@@ -44,20 +56,29 @@ class AuthService {
     final Uri url = Uri.parse('$API_URL/auth/register');
 
     try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: userJson,
+      final response = await safeRequest(
+        http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+          body: userJson,
+        ),
       );
 
-      final jsonBody = jsonDecode(response.body);
+      final jsonBody = jsonDecode(response!.body);
 
       return ApiResponse<String>.fromJson(
         jsonBody,
         fromData: (data) => '', // SignUp no necesita retornar datos
+      );
+    } on TimeoutException {
+      return ApiResponse<String>(
+        data: null,
+        message: 'La solicitud tardó demasiado. Intenta de nuevo.',
+        statusCode: 408,
+        error: 'Timeout',
       );
     } catch (e) {
       return ApiResponse<String>(

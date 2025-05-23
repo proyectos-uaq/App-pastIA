@@ -1,4 +1,4 @@
-import 'package:app_pastia/widgets/notification_container.dart';
+import 'package:past_ia/widgets/notification_container.dart';
 import 'package:flutter/material.dart';
 
 class TokenMissingScaffold extends StatelessWidget {

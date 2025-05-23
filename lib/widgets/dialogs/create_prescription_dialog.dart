@@ -1,6 +1,7 @@
-import 'package:app_pastia/models/prescription_model.dart';
-import 'package:app_pastia/services/prescription_service.dart';
+import 'package:past_ia/models/prescription_model.dart';
+import 'package:past_ia/services/prescription_service.dart';
 import 'package:flutter/material.dart';
+import 'package:past_ia/widgets/custom_circular_progress_indicator.dart';
 
 Future<String?> showCreatePrescriptionDialog(
   BuildContext context, {
@@ -73,10 +74,7 @@ Future<String?> showCreatePrescriptionDialog(
                               ? const SizedBox(
                                 width: 16,
                                 height: 16,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
+                                child: MyCustomLoader(),
                               )
                               : const Icon(Icons.add, color: Colors.white),
                       label: FittedBox(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:past_ia/widgets/custom_circular_progress_indicator.dart';
 
 class ErrorScaffold extends StatelessWidget {
   final String tittle;
@@ -82,7 +83,7 @@ class LoadingScaffold extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
       ),
-      body: const Center(child: CircularProgressIndicator()),
+      body: const Center(child: MyCustomLoader()),
     );
   }
 }

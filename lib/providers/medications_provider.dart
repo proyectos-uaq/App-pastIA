@@ -1,8 +1,8 @@
 // Provider para los detalles de una receta
-import 'package:app_pastia/models/medication_model.dart';
-import 'package:app_pastia/models/response_model.dart';
-import 'package:app_pastia/providers/providers.dart';
-import 'package:app_pastia/services/medication_service.dart';
+import 'package:past_ia/models/medication_model.dart';
+import 'package:past_ia/models/response_model.dart';
+import 'package:past_ia/providers/providers.dart';
+import 'package:past_ia/services/medication_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final medicationsDetailProvider =

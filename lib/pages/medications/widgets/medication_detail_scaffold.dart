@@ -1,11 +1,11 @@
-import 'package:app_pastia/pages/medications/widgets/detail_row.dart';
-import 'package:app_pastia/providers/medications_provider.dart';
-import 'package:app_pastia/utils/format_helpers.dart';
-import 'package:app_pastia/widgets/custom_buttons.dart';
-import 'package:app_pastia/widgets/custom_dialogs.dart';
+import 'package:past_ia/pages/medications/widgets/detail_row.dart';
+import 'package:past_ia/providers/medications_provider.dart';
+import 'package:past_ia/utils/format_helpers.dart';
+import 'package:past_ia/widgets/custom_buttons.dart';
+import 'package:past_ia/widgets/custom_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app_pastia/pages/medications/widgets/schedule_medication_card.dart';
+import 'package:past_ia/pages/medications/widgets/schedule_medication_card.dart';
 
 /// Encabezado y detalles del medicamento, junto a acciones y horarios.
 class MedicationDetailScaffold extends StatelessWidget {

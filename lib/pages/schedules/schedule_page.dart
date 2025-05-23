@@ -1,6 +1,7 @@
-import 'package:app_pastia/providers/providers.dart';
-import 'package:app_pastia/widgets/notification_container.dart';
-import 'package:app_pastia/pages/schedules/widgets/schedule_card.dart';
+import 'package:past_ia/providers/providers.dart';
+import 'package:past_ia/widgets/custom_circular_progress_indicator.dart';
+import 'package:past_ia/widgets/notification_container.dart';
+import 'package:past_ia/pages/schedules/widgets/schedule_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -77,7 +78,7 @@ class SchedulePage extends ConsumerWidget {
           ),
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: MyCustomLoader()),
       error:
           (err, stack) => NotificationContainer(
             message: '$err',

@@ -1,9 +1,10 @@
-import 'package:app_pastia/pages/medications/medication_nav_providers.dart';
-import 'package:app_pastia/pages/medications/widgets/medication_card.dart';
-import 'package:app_pastia/providers/medications_provider.dart';
-import 'package:app_pastia/providers/prescription_provider.dart';
-import 'package:app_pastia/widgets/custom_buttons.dart';
-import 'package:app_pastia/widgets/notification_container.dart';
+import 'package:past_ia/pages/medications/medication_nav_providers.dart';
+import 'package:past_ia/pages/medications/widgets/medication_card.dart';
+import 'package:past_ia/providers/medications_provider.dart';
+import 'package:past_ia/providers/prescription_provider.dart';
+import 'package:past_ia/widgets/custom_buttons.dart';
+import 'package:past_ia/widgets/custom_circular_progress_indicator.dart';
+import 'package:past_ia/widgets/notification_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -40,11 +41,11 @@ class MedicationListSection extends ConsumerWidget {
             );
           },
           error: (err, stack) => ErrorNotification(message: '$err'),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(child: MyCustomLoader()),
         );
       },
       error: (err, stack) => ErrorNotification(message: '$err'),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: MyCustomLoader()),
     );
   }
 }

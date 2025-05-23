@@ -1,8 +1,9 @@
-import 'package:app_pastia/pages/medications/medications_list_section.dart';
-import 'package:app_pastia/pages/principal/home_page.dart';
-import 'package:app_pastia/providers/medications_provider.dart';
-import 'package:app_pastia/providers/providers.dart';
-import 'package:app_pastia/widgets/error_scaffolds.dart';
+import 'package:past_ia/pages/medications/medications_list_section.dart';
+import 'package:past_ia/pages/principal/home_page.dart';
+import 'package:past_ia/providers/medications_provider.dart';
+import 'package:past_ia/providers/providers.dart';
+import 'package:past_ia/widgets/custom_circular_progress_indicator.dart';
+import 'package:past_ia/widgets/error_scaffolds.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
@@ -43,9 +44,7 @@ class MedicationsPage extends ConsumerWidget {
           (e, stackTrace) => ErrorScaffold(
             error: 'Ocurrio un error al cargar los medicamentos: $e',
           ),
-      loading:
-          () =>
-              const Scaffold(body: Center(child: CircularProgressIndicator())),
+      loading: () => const Scaffold(body: Center(child: MyCustomLoader())),
     );
   }
 }

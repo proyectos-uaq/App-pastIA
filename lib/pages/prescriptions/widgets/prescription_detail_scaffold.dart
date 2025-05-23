@@ -1,6 +1,6 @@
-import 'package:app_pastia/models/medication_model.dart';
-import 'package:app_pastia/utils/format_helpers.dart';
-import 'package:app_pastia/widgets/custom_buttons.dart';
+import 'package:past_ia/models/medication_model.dart';
+import 'package:past_ia/utils/format_helpers.dart';
+import 'package:past_ia/widgets/custom_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

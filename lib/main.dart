@@ -1,15 +1,16 @@
-import 'package:app_pastia/models/medication_model.dart';
-import 'package:app_pastia/pages/medications/medication_details_page.dart';
-import 'package:app_pastia/pages/medications/create_medication_page.dart';
-import 'package:app_pastia/pages/medications/update_medication_page.dart';
-import 'package:app_pastia/pages/prescriptions/prescription_details_page.dart';
-import 'package:app_pastia/pages/principal/home_page.dart';
-import 'package:app_pastia/pages/principal/login_page.dart';
-import 'package:app_pastia/pages/principal/register_page.dart';
-import 'package:app_pastia/providers/providers.dart';
+import 'package:past_ia/models/medication_model.dart';
+import 'package:past_ia/pages/medications/create_medication_page.dart';
+import 'package:past_ia/pages/medications/medication_details_page.dart';
+import 'package:past_ia/pages/medications/update_medication_page.dart';
+import 'package:past_ia/pages/prescriptions/prescription_details_page.dart';
+import 'package:past_ia/pages/principal/home_page.dart';
+import 'package:past_ia/pages/principal/login_page.dart';
+import 'package:past_ia/pages/principal/register_page.dart';
+import 'package:past_ia/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:past_ia/widgets/custom_circular_progress_indicator.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -50,9 +51,7 @@ class MyApp extends ConsumerWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // Puedes poner un splash o loader
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
+            return const Scaffold(body: Center(child: MyCustomLoader()));
           }
           if (snapshot.hasData && snapshot.data == true) {
             return HomePage();
@@ -92,9 +91,7 @@ class MyApp extends ConsumerWidget {
             future: _secureStorage.read(key: 'token'),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return const Scaffold(
-                  body: Center(child: CircularProgressIndicator()),
-                );
+                return const Scaffold(body: Center(child: MyCustomLoader()));
               }
               final token = snapshot.data;
               if (token == null || token.isEmpty) {
@@ -122,9 +119,7 @@ class MyApp extends ConsumerWidget {
             future: _secureStorage.read(key: 'token'),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return const Scaffold(
-                  body: Center(child: CircularProgressIndicator()),
-                );
+                return const Scaffold(body: Center(child: MyCustomLoader()));
               }
               final token = snapshot.data;
               if (token == null || token.isEmpty) {

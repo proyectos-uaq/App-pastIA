@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:app_pastia/api/constants.dart';
+import 'package:past_ia/api/constants.dart';
+import 'package:past_ia/utils/time_out_exception.dart';
 
 import '../models/intake_model.dart';
 import '../models/response_model.dart';
@@ -14,18 +16,22 @@ class ScheduleService {
   }) async {
     try {
       final url = Uri.parse('$API_URL/schedules');
-      final response = await http.post(
-        url,
-        headers: _headers(token),
-        body: jsonEncode(schedule.toJson()),
+      final response = await safeRequest(
+        http.post(
+          url,
+          headers: _headers(token),
+          body: jsonEncode(schedule.toJson()),
+        ),
       );
 
-      final jsonBody = jsonDecode(response.body);
+      final jsonBody = jsonDecode(response!.body);
 
       return ApiResponse<Schedule>.fromJson(
         jsonBody,
         fromData: (data) => Schedule.fromJson(data),
       );
+    } on TimeoutException {
+      return _timeoutResponse<Schedule>();
     } catch (e) {
       return _errorResponse<Schedule>(e);
     }
@@ -39,18 +45,22 @@ class ScheduleService {
   }) async {
     try {
       final url = Uri.parse('$API_URL/schedules/$scheduleId');
-      final response = await http.patch(
-        url,
-        headers: _headers(token),
-        body: jsonEncode(schedule.toJson()),
+      final response = await safeRequest(
+        http.patch(
+          url,
+          headers: _headers(token),
+          body: jsonEncode(schedule.toJson()),
+        ),
       );
 
-      final jsonBody = jsonDecode(response.body);
+      final jsonBody = jsonDecode(response!.body);
 
       return ApiResponse<Schedule>.fromJson(
         jsonBody,
         fromData: (data) => Schedule.fromJson(data),
       );
+    } on TimeoutException {
+      return _timeoutResponse<Schedule>();
     } catch (e) {
       return _errorResponse<Schedule>(e);
     }
@@ -63,14 +73,18 @@ class ScheduleService {
   }) async {
     try {
       final url = Uri.parse('$API_URL/schedules/$scheduleId');
-      final response = await http.delete(url, headers: _headers(token));
+      final response = await safeRequest(
+        http.delete(url, headers: _headers(token)),
+      );
 
-      final jsonBody = jsonDecode(response.body);
+      final jsonBody = jsonDecode(response!.body);
 
       return ApiResponse<Schedule>.fromJson(
         jsonBody,
         fromData: (data) => Schedule.fromJson(data),
       );
+    } on TimeoutException {
+      return _timeoutResponse<Schedule>();
     } catch (e) {
       return _errorResponse<Schedule>(e);
     }
@@ -83,9 +97,11 @@ class ScheduleService {
   }) async {
     try {
       final url = Uri.parse('$API_URL/schedules/$scheduleId/intake/logs');
-      final response = await http.get(url, headers: _headers(token));
+      final response = await safeRequest(
+        http.get(url, headers: _headers(token)),
+      );
 
-      final jsonBody = jsonDecode(response.body);
+      final jsonBody = jsonDecode(response!.body);
 
       return ApiResponse<List<Intake>>.fromJson(
         jsonBody,
@@ -93,6 +109,8 @@ class ScheduleService {
             (data) =>
                 (data as List).map((item) => Intake.fromJson(item)).toList(),
       );
+    } on TimeoutException {
+      return _timeoutResponse<List<Intake>>();
     } catch (e) {
       return _errorResponse<List<Intake>>(e);
     }
@@ -104,9 +122,11 @@ class ScheduleService {
   }) async {
     try {
       final url = Uri.parse('$API_URL/schedules');
-      final response = await http.get(url, headers: _headers(token));
+      final response = await safeRequest(
+        http.get(url, headers: _headers(token)),
+      );
 
-      final jsonBody = jsonDecode(response.body);
+      final jsonBody = jsonDecode(response!.body);
 
       return ApiResponse<List<Schedule>>.fromJson(
         jsonBody,
@@ -114,6 +134,8 @@ class ScheduleService {
             (data) =>
                 (data as List).map((item) => Schedule.fromJson(item)).toList(),
       );
+    } on TimeoutException {
+      return _timeoutResponse<List<Schedule>>();
     } catch (e) {
       return _errorResponse<List<Schedule>>(e);
     }
@@ -132,5 +154,12 @@ class ScheduleService {
     message: 'Ocurrió un error inesperado.',
     statusCode: 500,
     error: e.toString(),
+  );
+
+  static ApiResponse<T> _timeoutResponse<T>() => ApiResponse<T>(
+    data: null,
+    message: 'La solicitud tardó demasiado. Intenta de nuevo.',
+    statusCode: 408,
+    error: 'Timeout',
   );
 }

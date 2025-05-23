@@ -1,9 +1,10 @@
-import 'package:app_pastia/models/medication_model.dart';
-import 'package:app_pastia/providers/medications_provider.dart';
-import 'package:app_pastia/providers/prescription_provider.dart';
-import 'package:app_pastia/services/medication_service.dart';
-import 'package:app_pastia/widgets/text_fields/interval_text_field.dart';
-import 'package:app_pastia/widgets/text_fields/text_form_field.dart';
+import 'package:past_ia/models/medication_model.dart';
+import 'package:past_ia/providers/medications_provider.dart';
+import 'package:past_ia/providers/prescription_provider.dart';
+import 'package:past_ia/services/medication_service.dart';
+import 'package:past_ia/widgets/custom_circular_progress_indicator.dart';
+import 'package:past_ia/widgets/text_fields/interval_text_field.dart';
+import 'package:past_ia/widgets/text_fields/text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -108,10 +109,7 @@ class _UpdateMedicationFormState extends ConsumerState<UpdateMedicationForm> {
                     ? const SizedBox(
                       width: 16,
                       height: 16,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
+                      child: MyCustomLoader(),
                     )
                     : const Icon(Icons.save),
             label: Text(saving ? 'Guardando...' : 'Guardar'),

@@ -1,7 +1,7 @@
-import 'package:app_pastia/models/schedule_model.dart';
-import 'package:app_pastia/services/schedule_service.dart';
-import 'package:app_pastia/utils/format_helpers.dart';
-import 'package:app_pastia/widgets/custom_dialogs.dart';
+import 'package:past_ia/models/schedule_model.dart';
+import 'package:past_ia/services/schedule_service.dart';
+import 'package:past_ia/utils/format_helpers.dart';
+import 'package:past_ia/widgets/custom_dialogs.dart';
 import 'package:flutter/material.dart';
 
 class ScheduleCard extends StatelessWidget {

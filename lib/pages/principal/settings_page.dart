@@ -1,6 +1,6 @@
-import 'package:app_pastia/providers/providers.dart';
-import 'package:app_pastia/services/auth_service.dart';
-import 'package:app_pastia/widgets/dialogs/confirm_exit_dialog.dart';
+import 'package:past_ia/providers/providers.dart';
+import 'package:past_ia/services/auth_service.dart';
+import 'package:past_ia/widgets/dialogs/confirm_exit_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

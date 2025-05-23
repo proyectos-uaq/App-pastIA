@@ -1,4 +1,4 @@
-name: app_pastia
+name: past_ia
 description: "A new Flutter project."
 publish_to: "none"
 version: 0.1.0
@@ -14,6 +14,8 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   flutter_riverpod: ^2.4.0
   intl: ^0.19.0
+  flutter_launcher_icons: ^0.14.3
+  loading_indicator: ^3.1.1
 
 dev_dependencies:
   flutter_test:
@@ -22,3 +24,13 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path_android: "assets/Logo.png"
+  image_path_ios: "assets/Logo.png"
+  adaptive_icon_background: "#bbdefb"
+  adaptive_icon_foreground: "assets/Logo.png"

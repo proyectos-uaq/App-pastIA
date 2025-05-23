@@ -1,9 +1,9 @@
-import 'package:app_pastia/pages/medications/widgets/medication_detail_scaffold.dart';
-import 'package:app_pastia/providers/medications_provider.dart';
-import 'package:app_pastia/providers/prescription_provider.dart';
-import 'package:app_pastia/providers/providers.dart';
-import 'package:app_pastia/services/medication_service.dart';
-import 'package:app_pastia/widgets/custom_dialogs.dart';
+import 'package:past_ia/pages/medications/widgets/medication_detail_scaffold.dart';
+import 'package:past_ia/providers/medications_provider.dart';
+import 'package:past_ia/providers/prescription_provider.dart';
+import 'package:past_ia/providers/providers.dart';
+import 'package:past_ia/services/medication_service.dart';
+import 'package:past_ia/widgets/custom_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

@@ -1,7 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
-
-import 'package:app_pastia/api/constants.dart';
+import 'package:past_ia/api/constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:past_ia/utils/time_out_exception.dart';
 
 import '../models/medication_model.dart';
 import '../models/response_model.dart';
@@ -14,21 +15,30 @@ class MedicationService {
   }) async {
     try {
       final url = Uri.parse('$API_URL/medications');
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: medication.toRawJson(),
+      final response = await safeRequest(
+        http.post(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: medication.toRawJson(),
+        ),
       );
 
-      final jsonBody = jsonDecode(response.body);
+      final jsonBody = jsonDecode(response!.body);
 
       return ApiResponse<Medication>.fromJson(
         jsonBody,
         fromData: (data) => Medication.fromJson(data),
+      );
+    } on TimeoutException {
+      return ApiResponse<Medication>(
+        data: null,
+        message: 'La solicitud tardó demasiado. Intenta de nuevo.',
+        statusCode: 408,
+        error: 'Timeout',
       );
     } catch (e) {
       return ApiResponse<Medication>(
@@ -45,16 +55,18 @@ class MedicationService {
   }) async {
     try {
       final url = Uri.parse('$API_URL/medications');
-      final response = await http.get(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
+      final response = await safeRequest(
+        http.get(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        ),
       );
 
-      final jsonBody = jsonDecode(response.body);
+      final jsonBody = jsonDecode(response!.body);
 
       return ApiResponse<List<Medication>>.fromJson(
         jsonBody,
@@ -63,6 +75,13 @@ class MedicationService {
                 (data as List)
                     .map((item) => Medication.fromJson(item))
                     .toList(),
+      );
+    } on TimeoutException {
+      return ApiResponse<List<Medication>>(
+        data: null,
+        message: 'La solicitud tardó demasiado. Intenta de nuevo.',
+        statusCode: 408,
+        error: 'Timeout',
       );
     } catch (e) {
       return ApiResponse<List<Medication>>(
@@ -80,20 +99,29 @@ class MedicationService {
   }) async {
     try {
       final url = Uri.parse('$API_URL/medications/$id');
-      final response = await http.get(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
+      final response = await safeRequest(
+        http.get(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        ),
       );
 
-      final jsonBody = jsonDecode(response.body);
+      final jsonBody = jsonDecode(response!.body);
 
       return ApiResponse<Medication>.fromJson(
         jsonBody,
         fromData: (data) => Medication.fromJson(data),
+      );
+    } on TimeoutException {
+      return ApiResponse<Medication>(
+        data: null,
+        message: 'La solicitud tardó demasiado. Intenta de nuevo.',
+        statusCode: 408,
+        error: 'Timeout',
       );
     } catch (e) {
       return ApiResponse<Medication>(
@@ -112,21 +140,30 @@ class MedicationService {
   }) async {
     try {
       final url = Uri.parse('$API_URL/medications/$id');
-      final response = await http.patch(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-        body: medication.toRawJson(),
+      final response = await safeRequest(
+        http.patch(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+          body: medication.toRawJson(),
+        ),
       );
 
-      final jsonBody = jsonDecode(response.body);
+      final jsonBody = jsonDecode(response!.body);
 
       return ApiResponse<Medication>.fromJson(
         jsonBody,
         fromData: (data) => Medication.fromJson(data),
+      );
+    } on TimeoutException {
+      return ApiResponse<Medication>(
+        data: null,
+        message: 'La solicitud tardó demasiado. Intenta de nuevo.',
+        statusCode: 408,
+        error: 'Timeout',
       );
     } catch (e) {
       return ApiResponse<Medication>(
@@ -144,20 +181,29 @@ class MedicationService {
   }) async {
     try {
       final url = Uri.parse('$API_URL/medications/$id');
-      final response = await http.delete(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
+      final response = await safeRequest(
+        http.delete(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        ),
       );
 
-      final jsonBody = jsonDecode(response.body);
+      final jsonBody = jsonDecode(response!.body);
 
       return ApiResponse<String>.fromJson(
         jsonBody,
         fromData: (data) => data is Map ? data['message'] ?? '' : '',
+      );
+    } on TimeoutException {
+      return ApiResponse<String>(
+        data: null,
+        message: 'La solicitud tardó demasiado. Intenta de nuevo.',
+        statusCode: 408,
+        error: 'Timeout',
       );
     } catch (e) {
       return ApiResponse<String>(
@@ -175,22 +221,31 @@ class MedicationService {
   }) async {
     try {
       final url = Uri.parse('$API_URL/medications/$id/schedules');
-      final response = await http.get(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
+      final response = await safeRequest(
+        http.get(
+          url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        ),
       );
 
-      final jsonBody = jsonDecode(response.body);
+      final jsonBody = jsonDecode(response!.body);
 
       return ApiResponse<List<Schedule>>.fromJson(
         jsonBody,
         fromData:
             (data) =>
                 (data as List).map((item) => Schedule.fromJson(item)).toList(),
+      );
+    } on TimeoutException {
+      return ApiResponse<List<Schedule>>(
+        data: null,
+        message: 'La solicitud tardó demasiado. Intenta de nuevo.',
+        statusCode: 408,
+        error: 'Timeout',
       );
     } catch (e) {
       return ApiResponse<List<Schedule>>(

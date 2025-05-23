@@ -1,10 +1,11 @@
-import 'package:app_pastia/pages/medications/widgets/detail_scaffolds.dart';
-import 'package:app_pastia/pages/prescriptions/widgets/prescription_detail_scaffold.dart';
-import 'package:app_pastia/providers/medications_provider.dart';
-import 'package:app_pastia/providers/prescription_provider.dart';
-import 'package:app_pastia/providers/providers.dart';
-import 'package:app_pastia/services/prescription_service.dart';
-import 'package:app_pastia/widgets/custom_dialogs.dart';
+import 'package:past_ia/pages/medications/widgets/detail_scaffolds.dart';
+import 'package:past_ia/pages/prescriptions/widgets/prescription_detail_scaffold.dart';
+import 'package:past_ia/providers/medications_provider.dart';
+import 'package:past_ia/providers/prescription_provider.dart';
+import 'package:past_ia/providers/providers.dart';
+import 'package:past_ia/services/prescription_service.dart';
+import 'package:past_ia/widgets/custom_circular_progress_indicator.dart';
+import 'package:past_ia/widgets/custom_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -147,13 +148,13 @@ class _PrescriptionDetailPageState
               ref: ref,
             );
           },
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const Center(child: MyCustomLoader()),
           error:
               (err, stack) =>
                   ErrorScaffold(tittle: 'receta', message: "Error: $err"),
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: MyCustomLoader()),
       error:
           (err, stack) => ErrorScaffold(
             tittle: 'receta',

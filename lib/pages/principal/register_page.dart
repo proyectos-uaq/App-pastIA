@@ -1,9 +1,10 @@
-import 'package:app_pastia/models/user_model.dart';
-import 'package:app_pastia/services/auth_service.dart';
-import 'package:app_pastia/theme/button_styles.dart';
-import 'package:app_pastia/widgets/text_fields/text_form_field.dart';
+import 'package:past_ia/models/user_model.dart';
+import 'package:past_ia/services/auth_service.dart';
+import 'package:past_ia/theme/button_styles.dart';
+import 'package:past_ia/widgets/custom_circular_progress_indicator.dart';
+import 'package:past_ia/widgets/text_fields/text_form_field.dart';
 import 'package:flutter/material.dart';
-import 'package:app_pastia/widgets/logo.dart';
+import 'package:past_ia/widgets/logo.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -215,10 +216,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               ? const SizedBox(
                                 width: 20,
                                 height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
+                                child: MyCustomLoader(),
                               )
                               : const Text(
                                 'Registrarse',
@@ -300,7 +298,7 @@ class _Header extends StatelessWidget {
         const SizedBox(height: 32),
 
         const Text(
-          'PASTILLERO INTELIGENTE',
+          'PAST-IA',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,

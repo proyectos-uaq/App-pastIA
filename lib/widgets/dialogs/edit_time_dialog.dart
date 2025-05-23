@@ -1,6 +1,7 @@
-import 'package:app_pastia/models/schedule_model.dart';
-import 'package:app_pastia/services/schedule_service.dart';
+import 'package:past_ia/models/schedule_model.dart';
+import 'package:past_ia/services/schedule_service.dart';
 import 'package:flutter/material.dart';
+import 'package:past_ia/widgets/custom_circular_progress_indicator.dart';
 
 class EditTimeDialog {
   static String timeOfDayToHHmmss(TimeOfDay time) {
@@ -102,7 +103,7 @@ class EditTimeDialog {
                           ? const SizedBox(
                             width: 16,
                             height: 16,
-                            child: CircularProgressIndicator(strokeWidth: 2),
+                            child: MyCustomLoader(),
                           )
                           : const Icon(Icons.save, color: Colors.white),
                   label: Text(
