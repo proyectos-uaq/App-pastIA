@@ -1,21 +1,16 @@
+import 'package:app_pastia/providers/providers.dart';
 import 'package:app_pastia/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  ConsumerState<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
-  bool notificationsEnabled = true;
-  bool darkMode = false;
-  String selectedLanguage = 'Español';
-  double textScale = 1.0;
-
-  final List<String> languages = ['Español', 'Inglés', 'Francés', 'Alemán'];
-
+class _SettingsPageState extends ConsumerState<SettingsPage> {
   String? username;
   String? email;
 
@@ -36,101 +31,101 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final textScale = ref.watch(textScaleProvider);
+
     return Scaffold(
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Perfil
+            // Perfil con círculo de color
             Center(
-              child: Column(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 8),
-                  Text(
-                    username ?? 'Cargando...',
-                    style: Theme.of(context).textTheme.titleLarge,
+                  // Círculo de color
+                  Container(
+                    width: 48,
+                    height: 48,
+                    margin: const EdgeInsets.only(right: 16),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.green,
+                    ),
+                    child: Center(
+                      child: Text(
+                        username != null && username!.isNotEmpty
+                            ? username![0].toUpperCase()
+                            : '',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
-                  Text(
-                    email ?? '',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                  const SizedBox(width: 16),
+                  // Datos
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        username ?? 'Cargando...',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      Text(
+                        email ?? '',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 20),
                 ],
               ),
             ),
-
-            // Notificaciones
-            ListTile(
-              leading: const Icon(
-                Icons.notifications_active,
-                color: Colors.blue,
-              ),
-              title: const Text('Notificaciones'),
-              trailing: Switch(
-                value: notificationsEnabled,
-                onChanged: (value) {
-                  setState(() => notificationsEnabled = value);
-                },
-              ),
-            ),
-            const Divider(),
-
-            // Modo oscuro
-            ListTile(
-              leading: const Icon(Icons.dark_mode, color: Colors.indigo),
-              title: const Text('Modo oscuro'),
-              trailing: Switch(
-                value: darkMode,
-                onChanged: (value) {
-                  setState(() => darkMode = value);
-                },
-              ),
-            ),
-            const Divider(),
-
-            // Idioma
-            ListTile(
-              leading: const Icon(Icons.language, color: Colors.green),
-              title: const Text('Idioma'),
-              subtitle: Text(selectedLanguage),
-              trailing: DropdownButton<String>(
-                value: selectedLanguage,
-                items:
-                    languages
-                        .map(
-                          (lang) =>
-                              DropdownMenuItem(value: lang, child: Text(lang)),
-                        )
-                        .toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() => selectedLanguage = value);
-                  }
-                },
-              ),
-            ),
-            const Divider(),
-
+            const SizedBox(height: 20),
             // Tamaño de texto
             ListTile(
-              leading: const Icon(Icons.format_size, color: Colors.orange),
-              title: const Text('Tamaño del texto'),
-              subtitle: Slider(
-                value: textScale,
-                min: 0.8,
-                max: 1.5,
-                divisions: 7,
-                label: '${(textScale * 100).toStringAsFixed(0)}%',
-                onChanged: (value) {
-                  setState(() => textScale = value);
-                },
+              contentPadding: const EdgeInsets.symmetric(horizontal: 0),
+              title: const Row(
+                children: [
+                  Icon(Icons.format_size, color: Colors.orange),
+                  SizedBox(width: 10),
+                  Text('Tamaño de texto'),
+                ],
+              ),
+              subtitle: SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  activeTrackColor: Colors.orange,
+                  // ignore: deprecated_member_use
+                  inactiveTrackColor: Colors.orange.withOpacity(0.3),
+                  thumbColor: Colors.orange,
+                  // ignore: deprecated_member_use
+                  overlayColor: Colors.orange.withOpacity(0.15),
+                  thumbShape: const RoundSliderThumbShape(
+                    enabledThumbRadius: 12,
+                  ),
+                  trackHeight: 4,
+                  valueIndicatorColor: Colors.orange,
+                ),
+                child: Slider(
+                  value: textScale,
+                  min: 0.8,
+                  max: 1.5,
+                  divisions: 7,
+                  label: '${(textScale * 100).toStringAsFixed(0)}%',
+                  onChanged: (value) {
+                    ref.read(textScaleProvider.notifier).state = value;
+                  },
+                ),
               ),
             ),
             const Divider(),
 
             // Cambiar contraseña
             ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 0),
               leading: const Icon(Icons.lock, color: Colors.red),
               title: const Text('Cambiar contraseña'),
               trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey[400]),
@@ -142,6 +137,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
             // Cerrar sesión
             ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 0),
               leading: const Icon(Icons.logout, color: Colors.grey),
               title: const Text('Cerrar sesión'),
               trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey[400]),

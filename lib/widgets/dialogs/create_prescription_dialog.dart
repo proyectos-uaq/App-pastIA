@@ -25,7 +25,13 @@ Future<String?> showCreatePrescriptionDialog(
               children: const [
                 Icon(Icons.description, color: Colors.blueAccent),
                 SizedBox(width: 10),
-                Text("Agregar receta"),
+                Expanded(
+                  child: Text(
+                    "Agregar receta",
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                  ),
+                ),
               ],
             ),
             content: Form(
@@ -48,77 +54,92 @@ Future<String?> showCreatePrescriptionDialog(
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  TextButton(
-                    onPressed:
-                        saving ? null : () => Navigator.of(context).pop(),
-                    child: const Text(
-                      "Cancelar",
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ),
-                  ElevatedButton.icon(
-                    icon:
-                        saving
-                            ? const SizedBox(
-                              width: 16,
-                              height: 16,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                            : const Icon(Icons.add, color: Colors.white),
-                    label: Text(saving ? "Guardando..." : "Agregar"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                  Flexible(
+                    child: TextButton(
+                      onPressed:
+                          saving ? null : () => Navigator.of(context).pop(),
+                      child: const Text(
+                        "Cancelar",
+                        style: TextStyle(color: Colors.red),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    onPressed:
-                        saving
-                            ? null
-                            : () async {
-                              if (formKey.currentState!.validate()) {
-                                setState(() => saving = true);
+                  ),
+                  const SizedBox(width: 16),
+                  Flexible(
+                    child: ElevatedButton.icon(
+                      icon:
+                          saving
+                              ? const SizedBox(
+                                width: 16,
+                                height: 16,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
+                              : const Icon(Icons.add, color: Colors.white),
+                      label: FittedBox(
+                        child: Text(saving ? "Guardando..." : "Agregar"),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blueAccent,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed:
+                          saving
+                              ? null
+                              : () async {
+                                if (formKey.currentState!.validate()) {
+                                  setState(() => saving = true);
 
-                                Prescription prescription = Prescription(
-                                  name: nameController.text.trim(),
-                                  source: 'manual',
-                                );
+                                  Prescription prescription = Prescription(
+                                    name: nameController.text.trim(),
+                                    source: 'manual',
+                                  );
 
-                                final response =
-                                    await PrescriptionService.createPrescription(
-                                      prescription: prescription,
-                                      token: token,
-                                    );
+                                  final response =
+                                      await PrescriptionService.createPrescription(
+                                        prescription: prescription,
+                                        token: token,
+                                      );
 
-                                setState(() => saving = false);
+                                  setState(() => saving = false);
 
-                                if (context.mounted) {
-                                  if (response.error == null) {
-                                    Navigator.of(
-                                      context,
-                                    ).pop(nameController.text.trim());
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          "Receta creada correctamente",
+                                  if (context.mounted) {
+                                    if (response.error == null) {
+                                      Navigator.of(
+                                        context,
+                                      ).pop(nameController.text.trim());
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            "Receta creada correctamente",
+                                          ),
+                                          backgroundColor: Colors.green,
                                         ),
-                                        backgroundColor: Colors.green,
-                                      ),
-                                    );
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          'Ocurrió un error: ${response.error}',
+                                      );
+                                    } else {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            'Ocurrió un error: ${response.error}',
+                                          ),
+                                          backgroundColor: Colors.red,
                                         ),
-                                        backgroundColor: Colors.red,
-                                      ),
-                                    );
+                                      );
+                                    }
                                   }
                                 }
-                              }
-                            },
+                              },
+                    ),
                   ),
                 ],
               ),

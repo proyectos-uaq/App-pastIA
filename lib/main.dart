@@ -6,15 +6,16 @@ import 'package:app_pastia/pages/prescriptions/prescription_details_page.dart';
 import 'package:app_pastia/pages/principal/home_page.dart';
 import 'package:app_pastia/pages/principal/login_page.dart';
 import 'package:app_pastia/pages/principal/register_page.dart';
+import 'package:app_pastia/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
-  runApp(ProviderScope(child: MyApp()));
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
@@ -31,9 +32,19 @@ class MyApp extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textScale = ref.watch(textScaleProvider);
+
     return MaterialApp(
       title: 'Mi App',
+      builder: (context, child) {
+        return MediaQuery(
+          data: MediaQuery.of(
+            context,
+          ).copyWith(textScaler: TextScaler.linear(textScale)),
+          child: child!,
+        );
+      },
       home: FutureBuilder<bool>(
         future: hasToken(),
         builder: (context, snapshot) {

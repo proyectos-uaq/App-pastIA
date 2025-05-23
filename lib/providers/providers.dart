@@ -37,3 +37,6 @@ final autoRefreshProvider = StreamProvider<void>((ref) async* {
 final jwtTokenProvider = FutureProvider<String?>((ref) async {
   return await AuthService.getJwtToken();
 });
+
+// Provider para el tamaño de texto
+final textScaleProvider = StateProvider<double>((ref) => 1.0);
