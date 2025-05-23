@@ -1,6 +1,3 @@
-import 'package:app_pastia/providers/medications_provider.dart';
-import 'package:app_pastia/providers/prescription_provider.dart';
-import 'package:app_pastia/providers/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -45,38 +42,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       ),
-      actions: [
-        if (selectedIndex == 0)
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: 'Actualizar',
-            onPressed: () {
-              ref.invalidate(schedulesProvider(token));
-              ref.invalidate(prescriptionProvider(token));
-              ref.invalidate(medicationProvider(token));
-            },
-          ),
-        if (selectedIndex == 1)
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: 'Actualizar',
-            onPressed: () {
-              ref.invalidate(schedulesProvider(token));
-              ref.invalidate(prescriptionProvider(token));
-              ref.invalidate(medicationProvider(token));
-            },
-          ),
-        if (selectedIndex == 2)
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: 'Actualizar',
-            onPressed: () {
-              ref.invalidate(schedulesProvider(token));
-              ref.invalidate(prescriptionProvider(token));
-              ref.invalidate(medicationProvider(token));
-            },
-          ),
-      ],
     );
   }
 }

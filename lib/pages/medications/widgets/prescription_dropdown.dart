@@ -32,7 +32,9 @@ class PrescriptionDropdown extends StatelessWidget {
       decoration: const InputDecoration(
         labelText: 'Receta',
         hintText: 'Selecciona una receta',
-        border: OutlineInputBorder(),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
       ),
     );
   }

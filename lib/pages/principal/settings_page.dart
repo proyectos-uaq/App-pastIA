@@ -1,5 +1,6 @@
 import 'package:app_pastia/providers/providers.dart';
 import 'package:app_pastia/services/auth_service.dart';
+import 'package:app_pastia/widgets/dialogs/confirm_exit_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -141,12 +142,15 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               leading: const Icon(Icons.logout, color: Colors.grey),
               title: const Text('Cerrar sesión'),
               trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey[400]),
-              onTap: () {
-                var authService = AuthService();
-                authService.removeJwtToken().then((_) {
-                  // ignore: use_build_context_synchronously
-                  Navigator.pushReplacementNamed(context, '/login');
-                });
+              onTap: () async {
+                final confirmation = await showConfirmExitDialog(context);
+                if (confirmation == true) {
+                  var authService = AuthService();
+                  await authService.removeJwtToken();
+                  if (context.mounted) {
+                    Navigator.pushReplacementNamed(context, '/login');
+                  }
+                }
               },
             ),
           ],

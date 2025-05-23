@@ -22,7 +22,9 @@ class IntervalTextFormField extends StatelessWidget {
         labelText: 'Intervalo',
         hintText: 'Ejemplo: 08:00:00 para cada 8 horas',
         prefixIcon: Icon(Icons.schedule),
-        border: OutlineInputBorder(),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+        ),
       ),
       validator: intervalValidator,
     );
