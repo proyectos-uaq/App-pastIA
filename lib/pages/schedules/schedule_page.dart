@@ -1,3 +1,4 @@
+import 'package:past_ia/pages/schedules/intake_logs_page.dart';
 import 'package:past_ia/providers/providers.dart';
 import 'package:past_ia/widgets/custom_circular_progress_indicator.dart';
 import 'package:past_ia/widgets/notification_container.dart';
@@ -59,6 +60,18 @@ class SchedulePage extends ConsumerWidget {
                       token: token,
                       onEventUpdated: () {
                         ref.invalidate(schedulesProvider(token));
+                      },
+                      onTapNavigate: (context, schedule) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => IntakeLogsPage(
+                                  scheduleId: schedule.scheduleId!,
+                                  token: token,
+                                ),
+                          ),
+                        );
                       },
                     ),
                   ),

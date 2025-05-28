@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:past_ia/models/intake_model.dart';
 import 'package:past_ia/services/auth_service.dart';
 import 'package:past_ia/services/schedule_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,6 +23,24 @@ final schedulesProvider = FutureProvider.family<
   final response = await ScheduleService.getSchedules(token: token);
 
   // Si el error es un timeout, lanza una excepción (esto hará que Riverpod detecte el error)
+  if (response.statusCode == 408 || response.error == 'Timeout') {
+    throw TimeoutException(response.message);
+  }
+
+  handleServerError(response);
+  return response;
+});
+
+final intakeLogsProvider = FutureProvider.family<
+  ApiResponse<List<Intake>>,
+  (String scheduleId, String token)
+>((ref, args) async {
+  final (scheduleId, token) = args;
+  final response = await ScheduleService.getScheduleLogs(
+    scheduleId: scheduleId,
+    token: token,
+  );
+
   if (response.statusCode == 408 || response.error == 'Timeout') {
     throw TimeoutException(response.message);
   }

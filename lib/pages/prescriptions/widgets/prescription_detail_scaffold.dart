@@ -1,10 +1,14 @@
 import 'package:past_ia/models/medication_model.dart';
+import 'package:past_ia/services/ia_service.dart';
 import 'package:past_ia/utils/format_helpers.dart';
 import 'package:past_ia/widgets/custom_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:past_ia/widgets/dialogs/progress_dialog.dart';
+import 'package:past_ia/widgets/dialogs/slow_operation_dialog.dart';
+import 'package:past_ia/widgets/dialogs/error_dialog.dart';
 
 // Encabezado y detalles de la receta, junto a acciones y horarios.
 class PrescriptionDetailScaffold extends StatelessWidget {
@@ -23,6 +27,46 @@ class PrescriptionDetailScaffold extends StatelessWidget {
     required this.onDeletePrescription,
     required this.ref,
   });
+
+  Future<void> _sendDataToAI(BuildContext context) async {
+    // 1. Mostrar el diálogo de progreso
+    showProgressDialog(
+      context,
+      message: 'Procesando información de la receta...',
+    );
+
+    // 2. Esperar la respuesta de la API
+    final response = await sendDataToAI(
+      prescriptionId: prescriptionId,
+      token: token,
+    );
+
+    // 3. Cerrar el diálogo de progreso
+    // ignore: use_build_context_synchronously
+    Navigator.of(context, rootNavigator: true).pop();
+
+    // 4. Mostrar error si corresponde
+    if (response.statusCode != 200) {
+      // ignore: use_build_context_synchronously
+      await showErrorDialog(context, response.message);
+      return;
+    }
+
+    // Aquí continúa el flujo normal si fue éxito
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text(
+          '¡Tus horarios fueron actualizados correctamente!',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+        ),
+        backgroundColor: Colors.green[600],
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,6 +197,23 @@ class PrescriptionDetailScaffold extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 30),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: RoundedIconButton(
+                      icon: Icons.smart_toy_outlined,
+                      label: 'Enviar datos a la IA',
+                      onPressed: () async {
+                        final confirmation = await showSlowOperationInfoDialog(
+                          context,
+                        );
+                        if (confirmation == true) {
+                          // ignore: use_build_context_synchronously
+                          await _sendDataToAI(context);
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -171,7 +232,6 @@ class PrescriptionDetailScaffold extends StatelessWidget {
                           icon: Icons.add,
                           label: 'Agregar medicamento',
                           onPressed: () {
-                            // Navegar a la página de agregar medicamento
                             Navigator.pushNamed(
                               context,
                               '/createMedication',
@@ -185,7 +245,7 @@ class PrescriptionDetailScaffold extends StatelessWidget {
                       ),
                     ],
                   ),
-
+                  const SizedBox(height: 10),
                   const SizedBox(height: 10),
                   if (prescription.medications == null ||
                       prescription.medications!.isEmpty)
@@ -240,7 +300,6 @@ class _MedicationCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         hoverColor: Colors.blue.shade100,
         onTap: () {
-          // Navegar a la página de detalles de la medicación
           Navigator.pushNamed(
             context,
             '/medicationDetails',
@@ -265,7 +324,6 @@ class _MedicationCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 14),
-              // Información principal
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
